@@ -85,25 +85,46 @@ public class View extends JFrame
         buttonPanel.add(loadBtn, BorderLayout.CENTER);
     }
 
+//    private void loadButtonClicked() {
+//        String s = inputField.getText();
+//        if (s.length() > 0 && s.endsWith("00.csv")) {
+//            model.loadDataFrame(s);
+//            DefaultTableModel tableModel = new DefaultTableModel();
+//            table = new JTable(tableModel);
+//            tableModel.setColumnIdentifiers(model.getFieldNames().toArray());
+//            setColumnWidth(table);
+//            int colSize = model.getFieldNames().size();
+//            for (int i = 0; i < model.getNumberOfRows(); i++) {
+//                String[] rowData = new String[colSize] ;
+//                for (int k = 0; k < colSize; k++) {
+//                    String data = model.getColumnValueAt((model.getFieldNames().get(k)), i);
+//                    rowData[k] = data;
+//                }
+//                tableModel.addRow(rowData);
+//            }
+//            // TODO check which works
+//            tableModel.fireTableDataChanged();
+//            table.revalidate();
+//            table.repaint();
+//            // Get scroll pane to revalidate and repaint the table
+//            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//            scrollPane.setViewportView(table);
+//            scrollPane.revalidate();
+//            scrollPane.repaint();
+//        }
+//        inputField.setText("");
+//    }
+
     private void loadButtonClicked() {
         String s = inputField.getText();
         if (s.length() > 0 && s.endsWith("00.csv")) {
             model.loadDataFrame(s);
-            DefaultTableModel tableModel = new DefaultTableModel();
-            table = new JTable(tableModel);
-            tableModel.setColumnIdentifiers(model.getFieldNames().toArray());
+//            DefaultTableModel tableModel = new DefaultTableModel();
+            table = new JTable(model);
             setColumnWidth(table);
-            int colSize = model.getFieldNames().size();
-            for (int i = 0; i < model.getNumberOfRows(); i++) {
-                String[] rowData = new String[colSize] ;
-                for (int k = 0; k < colSize; k++) {
-                    String data = model.getColumnValueAt((model.getFieldNames().get(k)), i);
-                    rowData[k] = data;
-                }
-                tableModel.addRow(rowData);
-            }
-            // TODO check which works
-            tableModel.fireTableDataChanged();
+//            tableModel.fireTableDataChanged();
+            model.fireTableStructureChanged();
+            model.fireTableDataChanged();
             table.revalidate();
             table.repaint();
             // Get scroll pane to revalidate and repaint the table

@@ -2,9 +2,11 @@ import dataframapackage.Column;
 import dataframapackage.DataFrame;
 import dataframapackage.DataLoader;
 
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 
-public class DataManager implements Model {
+public class DataManager extends AbstractTableModel implements Model {
 // TODO add override
 // TODO RENAME CLASS
     private DataFrame dataFrame;
@@ -40,5 +42,25 @@ public class DataManager implements Model {
     public int getNumberOfRows()
     {
         return dataFrame.getRowCount();
+    }
+
+    @Override
+    public int getRowCount() {
+        return dataFrame.getRowCount();
+    }
+
+    @Override
+    public int getColumnCount() {
+        return dataFrame.getColumnNames().size();
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        return dataFrame.getValue(dataFrame.getColumnName(columnIndex), rowIndex);
+    }
+
+    @Override
+    public String getColumnName(int columnIndex) {
+        return dataFrame.getColumnName(columnIndex);
     }
 }
