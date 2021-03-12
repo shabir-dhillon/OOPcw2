@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 public class View extends JFrame
 {
@@ -19,6 +20,7 @@ public class View extends JFrame
     private DataManager model;
     private JTextField inputField;
     private  JScrollPane scrollPane;
+    private JFileChooser fileLoader;
     private JTable table = new JTable();
 
     public View()
@@ -71,10 +73,10 @@ public class View extends JFrame
         createButtonPanel();
         topPanel = new JPanel(new BorderLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-        inputField = new JTextField();
-        inputField.setPreferredSize(new Dimension(100,20));
-        topPanel.add(inputField, BorderLayout.WEST);
-        topPanel.add(buttonPanel, BorderLayout.EAST);
+//        inputField = new JTextField();
+//        inputField.setPreferredSize(new Dimension(100,20));
+//        topPanel.add(inputField, BorderLayout.WEST);
+        topPanel.add(buttonPanel, BorderLayout.WEST);
     }
 
     private void createButtonPanel()
@@ -116,33 +118,49 @@ public class View extends JFrame
 //    }
 
     private void loadButtonClicked() {
-        String s = inputField.getText();
-        if (s.length() > 0 && s.endsWith("00.csv")) {
-            model.loadDataFrame(s);
-//            DefaultTableModel tableModel = new DefaultTableModel();
+        File fileToLoad = chooseFileToLoad();
+        model.loadDataFrame(fileToLoad);
+//        String s = inputField.getText();
+        if (fileToLoad != null) {
             table = new JTable(model);
-            setColumnWidth(table);
-//            tableModel.fireTableDataChanged();
+            table.setDefaultRenderer(Object.class, new TableCell());
             model.fireTableStructureChanged();
             model.fireTableDataChanged();
             table.revalidate();
             table.repaint();
+            setColumnWidth(table);
             // Get scroll pane to revalidate and repaint the table
             table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             scrollPane.setViewportView(table);
             scrollPane.revalidate();
             scrollPane.repaint();
         }
-        inputField.setText("");
+//        inputField.setText("");
+    }
+
+    private File chooseFileToLoad() {
+        File fileToLoad;
+        fileLoader = new JFileChooser(".");
+        fileLoader.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        int response = fileLoader.showOpenDialog(null);
+
+        if (response == JFileChooser.APPROVE_OPTION)
+        {
+            fileToLoad = fileLoader.getSelectedFile();
+            return fileToLoad;
+        }
+        return null;
     }
 
     private void setColumnWidth(JTable table) {
         TableColumn column = null;
         for (int i = 0; i < table.getColumnCount(); i++) {
-            column = table.getColumnModel().getColumn(i);
+            column = this.table.getColumnModel().getColumn(i);
             column.setPreferredWidth(200);
         }
     }
+
+
 
 
 //    private void createLeftPanel()

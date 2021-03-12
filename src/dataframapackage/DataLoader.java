@@ -7,11 +7,11 @@ import java.util.Scanner; // Import the Scanner class to read text files
 
 //  ID,BIRTHDATE,DEATHDATE,SSN,DRIVERS,PASSPORT,PREFIX,FIRST,LAST,SUFFIX,MAIDEN,MARITAL,RACE,ETHNICITY,GENDER,BIRTHPLACE,ADDRESS,CITY,STATE,ZIP
 public class DataLoader {
-    public DataFrame loadData(String csvFileName) {
+    public DataFrame loadData(File csvFileName) {
         DataFrame fileData = new DataFrame();
         try {
-            File inputFile = new File("COMP0004Data-master/COMP0004Data-master/" + csvFileName);
-            Scanner scanner = new Scanner(inputFile);
+//            File inputFile = new File("COMP0004Data-master/COMP0004Data-master/" + csvFileName);
+            Scanner scanner = new Scanner(csvFileName);
             int i = 0;
             ArrayList<String> colNames = new ArrayList<>();
             while (scanner.hasNextLine()) {

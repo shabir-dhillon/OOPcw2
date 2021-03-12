@@ -4,7 +4,11 @@ import dataframapackage.DataLoader;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DataManager extends AbstractTableModel implements Model {
 // TODO add override
@@ -18,7 +22,7 @@ public class DataManager extends AbstractTableModel implements Model {
         loader = new DataLoader();
     }
 
-    public DataFrame loadDataFrame(String fileName)
+    public DataFrame loadDataFrame(File fileName)
     {
         dataFrame = loader.loadData(fileName);
         return dataFrame;
@@ -33,11 +37,6 @@ public class DataManager extends AbstractTableModel implements Model {
     public String getColumnValueAt(String columnName, int row) {
         return dataFrame.getValue(columnName, row);
     }
-//
-//    public String getColumnValueAt(String columnName, int row)
-//    {
-//        return dataFrame.getValue(columnName, row);
-//    }
 
     public int getNumberOfRows()
     {
@@ -62,5 +61,14 @@ public class DataManager extends AbstractTableModel implements Model {
     @Override
     public String getColumnName(int columnIndex) {
         return dataFrame.getColumnName(columnIndex);
+    }
+
+    @Override
+    public Color getRowColour(int row) {
+        if (row % 2 == 0)
+        {
+            return new Color(0xC3D8E5);
+        }
+        return new Color(0xE5D0C3);
     }
 }
