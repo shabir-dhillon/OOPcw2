@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,9 +62,9 @@ public class View extends JFrame
     }
 
     private void createCenterPanel() {
-        scrollPane = new JScrollPane(table);
+        scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         centerPanel = new JPanel(new BorderLayout());
-        centerPanel.add(scrollPane, BorderLayout.CENTER);
+        centerPanel.add(scrollPane, BorderLayout.CENTER );
     }
 
     private void createTopPanel() {
@@ -90,9 +91,8 @@ public class View extends JFrame
             model.loadDataFrame(s);
             DefaultTableModel tableModel = new DefaultTableModel();
             table = new JTable(tableModel);
-            // TODO SET UP ADD COL METHOD and ADD ROW
-            // TODO ADD METHOD
             tableModel.setColumnIdentifiers(model.getFieldNames().toArray());
+            setColumnWidth(table);
             int colSize = model.getFieldNames().size();
             for (int i = 0; i < model.getNumberOfRows(); i++) {
                 String[] rowData = new String[colSize] ;
@@ -107,12 +107,22 @@ public class View extends JFrame
             table.revalidate();
             table.repaint();
             // Get scroll pane to revalidate and repaint the table
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             scrollPane.setViewportView(table);
             scrollPane.revalidate();
             scrollPane.repaint();
         }
         inputField.setText("");
     }
+
+    private void setColumnWidth(JTable table) {
+        TableColumn column = null;
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            column = table.getColumnModel().getColumn(i);
+            column.setPreferredWidth(200);
+        }
+    }
+
 
 //    private void createLeftPanel()
 //    {
