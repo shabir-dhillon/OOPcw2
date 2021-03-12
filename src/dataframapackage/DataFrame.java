@@ -7,10 +7,8 @@ import java.util.ArrayList;
 public class DataFrame { ;
     public ArrayList<Column> dataFrame;
 
-    public DataFrame()
-    {
-        this.dataFrame = new ArrayList<>();
-    }
+    public DataFrame() {
+        this.dataFrame = new ArrayList<>(); }
 
     // TODO CHECK IF NEEDED
     public boolean isEmpty()
@@ -24,8 +22,8 @@ public class DataFrame { ;
     }
 
     // TODO CHECK IF NEEDED
-    public String getColumnName(int col) {
-        return dataFrame.get(col).getName();
+    public String getColumnName(int index) {
+        return dataFrame.get(index).getName();
     }
 
     public ArrayList<String> getColumnNames() {

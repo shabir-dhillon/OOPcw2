@@ -21,10 +21,7 @@ public class Column {
         return rows.size();
     }
 
-    public String getRowValue(int index)
-    {
-        return rows.get(index);
-    }
+    public String getRowValue(int index) { return rows.get(index); }
 
     public void setRowValue(int index, String newValue)
     {
