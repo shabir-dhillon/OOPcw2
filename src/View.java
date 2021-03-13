@@ -19,11 +19,12 @@ public class View extends JFrame
     private JButton loadBtn;
     private JButton submitBtn;
     private DataManager model;
-    private  JScrollPane scrollPane;
+    private JScrollPane scrollPane;
     private JScrollPane scrollFilter;
     private JFileChooser fileLoader;
     private ArrayList<JCheckBox> filterBoxes;
     private JTable table = new JTable();
+    private Boolean[]  columnFilter;
 
     public View()
     {
@@ -203,8 +204,29 @@ public class View extends JFrame
         }
     }
 
-    private void submitBtnClicked() {
+    private void submitBtnClicked()
+    {
         System.out.println("CLICK");
+        columnFilter = new Boolean[model.getColumnCount()];
+
+        for (int i = 0; i < columnFilter.length; i++)
+        {
+            columnFilter[i] = filterBoxes.get(i).isSelected();
+            System.out.println(columnFilter[i]);
+        }
+        hideFilteredColumns();
+    }
+
+    private void hideFilteredColumns() {
+        TableColumn column = null;
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            column = this.table.getColumnModel().getColumn(i);
+            if (columnFilter[i].equals(false))
+            {
+                column.setPreferredWidth(-100);
+            }
+            else {column.setPreferredWidth(200);}
+        }
     }
 
     public static void main(final String[] args) { SwingUtilities.invokeLater(View::new); }
