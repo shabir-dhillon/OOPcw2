@@ -218,14 +218,20 @@ public class View extends JFrame
     }
 
     private void hideFilteredColumns() {
-        TableColumn column = null;
         for (int i = 0; i < table.getColumnCount(); i++) {
-            column = this.table.getColumnModel().getColumn(i);
             if (columnFilter[i].equals(false))
             {
-                column.setPreferredWidth(-100);
+                // TODO
+                table.getColumnModel().getColumn(i).setMinWidth(0);
+                table.getColumnModel().getColumn(i).setMaxWidth(0);
+                table.getColumnModel().getColumn(i).setWidth(0);
             }
-            else {column.setPreferredWidth(200);}
+            else
+                {
+                    table.getColumnModel().getColumn(i).setMinWidth(200);
+                    table.getColumnModel().getColumn(i).setMaxWidth(200);
+                    table.getColumnModel().getColumn(i).setWidth(200);
+                }
         }
     }
 
