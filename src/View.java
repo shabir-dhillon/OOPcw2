@@ -36,20 +36,18 @@ public class View extends JFrame
         pack();
         setSize(800,620);
         setVisible(true);
-
         ImageIcon image = new ImageIcon("src/logo.png");
         setIconImage(image.getImage());
-        // Teal
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
+                if (JOptionPane.NO_OPTION != JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
                         "Are you sure you want to exit?", "Confirm Exit",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION)
-                {
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+                    System.exit(0);
+                } else {
                     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
                 }
-                else { System.exit(0); }
             }
         });
     }
