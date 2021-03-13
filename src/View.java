@@ -1,26 +1,28 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 
 public class View extends JFrame
 {
     private JPanel topPanel;
     private JPanel centerPanel;
     private JPanel buttonPanel;
-//    private JPanel leftPanel;
+    private JPanel leftPanel;
     private JPanel mainPanel;
     private JButton loadBtn;
+    private JButton submitBtn;
     private DataManager model;
-    private JTextField inputField;
     private  JScrollPane scrollPane;
     private JFileChooser fileLoader;
+    private int filterBoxCount;
+    private ArrayList<JCheckBox> filterBoxes;
     private JTable table = new JTable();
 
     public View()
@@ -31,27 +33,32 @@ public class View extends JFrame
         createGUI();
 
         //---------------------
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
-        setSize(620,420);
+        setSize(800,620);
         setVisible(true);
 
         ImageIcon image = new ImageIcon("src/logo.png");
         setIconImage(image.getImage());
         // Teal
-        getContentPane().setBackground(new Color(0,80,80));
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
+                        "Are you sure you want to exit?", "Confirm Exit",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.NO_OPTION)
+                {
+                    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                }
+                else { System.exit(0); }
+            }
+        });
     }
 
-    public void setModel()
-    {
-        model = new DataManager();
-
-    }
+    public void setModel() { model = new DataManager(); }
 
     public void createGUI() {
         createTopPanel();
         createCenterPanel();
-//        createLeftPanel();
         createMainPanel();
         add(mainPanel, BorderLayout.CENTER);
     }
@@ -73,9 +80,6 @@ public class View extends JFrame
         createButtonPanel();
         topPanel = new JPanel(new BorderLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-//        inputField = new JTextField();
-//        inputField.setPreferredSize(new Dimension(100,20));
-//        topPanel.add(inputField, BorderLayout.WEST);
         topPanel.add(buttonPanel, BorderLayout.WEST);
     }
 
@@ -87,6 +91,7 @@ public class View extends JFrame
         buttonPanel.add(loadBtn, BorderLayout.CENTER);
     }
 
+    // Hard Code JTable below
 //    private void loadButtonClicked() {
 //        String s = inputField.getText();
 //        if (s.length() > 0 && s.endsWith("00.csv")) {
@@ -118,9 +123,9 @@ public class View extends JFrame
 //    }
 
     private void loadButtonClicked() {
+//        setModel();
         File fileToLoad = chooseFileToLoad();
         model.loadDataFrame(fileToLoad);
-//        String s = inputField.getText();
         if (fileToLoad != null) {
             table = new JTable(model);
             table.setDefaultRenderer(Object.class, new TableCell());
@@ -135,12 +140,25 @@ public class View extends JFrame
             scrollPane.revalidate();
             scrollPane.repaint();
         }
-//        inputField.setText("");
+        if (leftPanel != null) mainPanel.remove(leftPanel);
+        createFilterPanel();
+    }
+
+    private void createFilterPanel() {
+        createLeftPanel();
+        getFilterList();
+        addBoxesToPanel();
+        leftPanel.revalidate();
+        leftPanel.repaint();
+        mainPanel.add(leftPanel, BorderLayout.WEST);
+        mainPanel.updateUI();
     }
 
     private File chooseFileToLoad() {
         File fileToLoad;
         fileLoader = new JFileChooser(".");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".csv", "csv");
+        fileLoader.setFileFilter(filter);
         fileLoader.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         int response = fileLoader.showOpenDialog(null);
 
@@ -160,14 +178,35 @@ public class View extends JFrame
         }
     }
 
+    private void createLeftPanel()
+    {
+        leftPanel = new JPanel(new FlowLayout());
+        leftPanel.setPreferredSize(new Dimension(100, 100));
+        filterBoxes = new ArrayList<>();
+    }
 
+    private void addBoxesToPanel() {
+        for (JCheckBox filterBox : this.filterBoxes) {
+            this.leftPanel.add(filterBox);
+        }
+        submitBtn = new JButton("Submit");
+        submitBtn.addActionListener((ActionEvent e) -> submitBtnClicked());
+        leftPanel.add(submitBtn);
+    }
 
+    private void getFilterList() {
+        ArrayList<String> boxID = model.getFieldNames();
+        for (String s : boxID)
+        {
+            JCheckBox checkBox = new JCheckBox();
+            checkBox.setText(s);
+            filterBoxes.add(checkBox);
+        }
+    }
 
-//    private void createLeftPanel()
-//    {
-//        leftPanel = new JPanel();
-//
-//    }
+    private void submitBtnClicked() {
+        System.out.println("CLICK");
+    }
 
     public static void main(final String[] args) { SwingUtilities.invokeLater(View::new); }
 }
