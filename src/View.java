@@ -20,8 +20,8 @@ public class View extends JFrame
     private JButton submitBtn;
     private DataManager model;
     private  JScrollPane scrollPane;
+    private JScrollPane scrollFilter;
     private JFileChooser fileLoader;
-    private int filterBoxCount;
     private ArrayList<JCheckBox> filterBoxes;
     private JTable table = new JTable();
 
@@ -123,7 +123,6 @@ public class View extends JFrame
 //    }
 
     private void loadButtonClicked() {
-//        setModel();
         File fileToLoad = chooseFileToLoad();
         model.loadDataFrame(fileToLoad);
         if (fileToLoad != null) {
@@ -140,7 +139,11 @@ public class View extends JFrame
             scrollPane.revalidate();
             scrollPane.repaint();
         }
-        if (leftPanel != null) mainPanel.remove(leftPanel);
+        if (leftPanel != null)
+        {
+            scrollFilter.remove(leftPanel);
+            mainPanel.remove(scrollFilter);
+        }
         createFilterPanel();
     }
 
@@ -148,9 +151,8 @@ public class View extends JFrame
         createLeftPanel();
         getFilterList();
         addBoxesToPanel();
-        leftPanel.revalidate();
-        leftPanel.repaint();
-        mainPanel.add(leftPanel, BorderLayout.WEST);
+        scrollFilter = new JScrollPane(leftPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        mainPanel.add(scrollFilter, BorderLayout.WEST);
         mainPanel.updateUI();
     }
 
@@ -180,8 +182,7 @@ public class View extends JFrame
 
     private void createLeftPanel()
     {
-        leftPanel = new JPanel(new FlowLayout());
-        leftPanel.setPreferredSize(new Dimension(100, 100));
+        leftPanel = new JPanel(new GridLayout(model.getColumnCount() + 1, 1, 5, 5));
         filterBoxes = new ArrayList<>();
     }
 
