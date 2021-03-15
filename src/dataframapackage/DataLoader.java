@@ -10,7 +10,7 @@ public class DataLoader {
     public DataFrame loadData(File csvFileName) {
         DataFrame fileData = new DataFrame();
         try {
-//            File inputFile = new File("COMP0004Data-master/COMP0004Data-master/" + csvFileName);
+            // TODO CLEAN UP
             Scanner scanner = new Scanner(csvFileName);
             int i = 0;
             ArrayList<String> colNames = new ArrayList<>();
@@ -32,7 +32,8 @@ public class DataLoader {
                 }
             }
             scanner.close();
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
+            // TODO
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
