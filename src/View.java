@@ -1,9 +1,8 @@
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -29,6 +28,7 @@ public class View extends JFrame
     private ArrayList<JCheckBox> filterBoxes;
     private JTable table = new JTable();
     private ArrayList<Boolean>  columnFilter;
+    private TableRowSorter<DataManager> sorter;
 
     public View()
     {
@@ -94,11 +94,36 @@ public class View extends JFrame
         searchBtn.addActionListener((ActionEvent e) -> searchButtonClicked());
         searchBtn.setEnabled(false);
         inputField = new JTextField();
+        inputField.setEnabled(false);
+        inputField.getDocument().addDocumentListener(
+                new DocumentListener() {
+                    public void changedUpdate(DocumentEvent e) {
+                        newFilter();
+                    }
+                    public void insertUpdate(DocumentEvent e) {
+                        newFilter();
+                    }
+                    public void removeUpdate(DocumentEvent e) {
+                        newFilter();
+                    }
+                });
         inputField.setPreferredSize(new Dimension(90, 25));
         columnSelection = new JComboBox();
         searchPanel.add(columnSelection);
         searchPanel.add(inputField);
         searchPanel.add(searchBtn);
+    }
+
+    private void newFilter() {
+        RowFilter<DataManager, Object> rf = null;
+        int colIndex = columnSelection.getSelectedIndex();
+        //If current expression doesn't parse, don't update.
+        try {
+            rf = RowFilter.regexFilter(inputField.getText(), colIndex);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+        sorter.setRowFilter(rf);
     }
 
     private void updateComboBox() {
@@ -155,6 +180,7 @@ public class View extends JFrame
         }
         createFilterPanel();
         submitBtn.setEnabled(true);
+        inputField.setEnabled(true);
     }
 
     private void revalidateTable() {
@@ -178,6 +204,8 @@ public class View extends JFrame
         scrollFilter = new JScrollPane(leftPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         // Has limitations due to comparison and sorting of strings
         table.setAutoCreateRowSorter(true);
+        sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
         updateComboBox();
         mainPanel.add(scrollFilter, BorderLayout.WEST);
         mainPanel.updateUI();
