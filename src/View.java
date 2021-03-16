@@ -90,10 +90,24 @@ public class View extends JFrame
 
     private void createSearchPanel() {
         searchPanel = new JPanel(new FlowLayout());
-        searchBtn = new JButton("Search");
+        createSearchPanelComponents();
+        searchPanel.add(columnSelection);
+        searchPanel.add(inputField);
+        searchPanel.add(searchBtn);
+    }
+
+    private void createSearchPanelComponents() {
+        searchBtn = new JButton("Advanced Search");
+        searchBtn.setMaximumSize(new Dimension(200,200));
+        searchBtn.setMinimumSize(new Dimension(100, 100));
         searchBtn.addActionListener((ActionEvent e) -> searchButtonClicked());
         searchBtn.setEnabled(false);
         inputField = new JTextField();
+        setInputFieldSettings();
+        columnSelection = new JComboBox();
+    }
+
+    private void setInputFieldSettings() {
         inputField.setEnabled(false);
         inputField.getDocument().addDocumentListener(
                 new DocumentListener() {
@@ -108,10 +122,6 @@ public class View extends JFrame
                     }
                 });
         inputField.setPreferredSize(new Dimension(90, 25));
-        columnSelection = new JComboBox();
-        searchPanel.add(columnSelection);
-        searchPanel.add(inputField);
-        searchPanel.add(searchBtn);
     }
 
     private void newFilter() {
@@ -147,10 +157,7 @@ public class View extends JFrame
     }
 
     private void searchButtonClicked() {
-        String selectedCol = (String) columnSelection.getSelectedItem();
-        int colIndex = columnSelection.getSelectedIndex();
-//        System.out.println(selectedCol);
-//        System.out.println(colIndex);
+        System.out.println("CLICK");
     }
 
     private void createButtonPanel()
@@ -196,22 +203,6 @@ public class View extends JFrame
         scrollPane.repaint();
     }
 
-    private void createFilterPanel() {
-        createLeftPanel();
-        getFilterList();
-        addBoxesToPanel();
-//        System.out.println("Done");
-        scrollFilter = new JScrollPane(leftPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        // Has limitations due to comparison and sorting of strings
-        table.setAutoCreateRowSorter(true);
-        sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
-        updateComboBox();
-        mainPanel.add(scrollFilter, BorderLayout.WEST);
-        mainPanel.updateUI();
-//        System.out.println("out");
-    }
-
     private File chooseFileToLoad() {
         File fileToLoad;
         fileLoader = new JFileChooser(".");
@@ -226,15 +217,9 @@ public class View extends JFrame
             {
                 fileToLoad = fileLoader.getSelectedFile();
                 return fileToLoad;
-            } catch (Exception e)
-            {
-                JOptionPane.showMessageDialog(getParent(), e.toString());
-            }
+            } catch (Exception e) { JOptionPane.showMessageDialog(getParent(), e.toString()); }
         }
-        else
-        {
-            JOptionPane.showMessageDialog(getParent(), "No File Selected.");
-        }
+        else { JOptionPane.showMessageDialog(getParent(), "No File Selected."); }
         return null;
     }
 
@@ -244,6 +229,22 @@ public class View extends JFrame
             column = table.getColumnModel().getColumn(i);
             column.setPreferredWidth(200);
         }
+    }
+
+    private void createFilterPanel() {
+        createLeftPanel();
+        getFilterList();
+        addBoxesToPanel();
+//        System.out.println("Done");
+        scrollFilter = new JScrollPane(leftPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        // Has limitations due to comparison and sorting of strings
+        table.setAutoCreateRowSorter(true);
+        sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
+        updateComboBox();
+        mainPanel.add(scrollFilter, BorderLayout.WEST);
+        mainPanel.updateUI();
+//        System.out.println("out");
     }
 
     private void createLeftPanel()
@@ -276,11 +277,7 @@ public class View extends JFrame
         System.out.println("CLICK");
         columnFilter = new ArrayList<>();
         int colCount = model.getColumnCount();
-
-        for (int i = 0; i < colCount; i++)
-        {
-            columnFilter.add(filterBoxes.get(i).isSelected());
-        }
+        for (int i = 0; i < colCount; i++) { columnFilter.add(filterBoxes.get(i).isSelected()); }
 //        System.out.println("____________________________");
         hideFilteredColumns();
         System.out.println("Exit here");
@@ -292,17 +289,19 @@ public class View extends JFrame
             if (columnFilter.get(i).equals(false))
             {
                 // TODO
-                table.getColumnModel().getColumn(i).setMinWidth(0);
-                table.getColumnModel().getColumn(i).setMaxWidth(0);
-                table.getColumnModel().getColumn(i).setWidth(0);
+                adjustColumnWidth(i, 0);
             }
             else
             {
-                table.getColumnModel().getColumn(i).setMinWidth(200);
-                table.getColumnModel().getColumn(i).setMaxWidth(200);
-                table.getColumnModel().getColumn(i).setWidth(200);
+                adjustColumnWidth(i, 200);
             }
         }
+    }
+
+    private void adjustColumnWidth(int i, int width) {
+        table.getColumnModel().getColumn(i).setMinWidth(width);
+        table.getColumnModel().getColumn(i).setMaxWidth(width);
+        table.getColumnModel().getColumn(i).setWidth(width);
     }
 
     public static void main(final String[] args) { SwingUtilities.invokeLater(View::new); }
