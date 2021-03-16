@@ -30,11 +30,11 @@ public class View extends JFrame
     private ArrayList<Boolean>  columnFilter;
     private TableRowSorter<DataManager> sorter;
 
-    public View()
+    public View(DataManager model)
     {
         super("Data Loader");
         setLayout(new BorderLayout());
-        setModel();
+        setModel(model);
         createGUI();
 
         //---------------------
@@ -57,7 +57,8 @@ public class View extends JFrame
         });
     }
 
-    public void setModel() { model = new DataManager(); }
+    public void setModel(DataManager model)
+    { this.model = model; }
 
     public void createGUI() {
         createTopPanel();
@@ -304,5 +305,8 @@ public class View extends JFrame
         table.getColumnModel().getColumn(i).setWidth(width);
     }
 
-    public static void main(final String[] args) { SwingUtilities.invokeLater(View::new); }
+    public static void main(final String[] args, DataManager mainModel)
+    {
+        SwingUtilities.invokeLater(() -> new View(mainModel));
+    }
 }
