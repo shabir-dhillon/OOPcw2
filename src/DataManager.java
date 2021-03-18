@@ -38,10 +38,6 @@ public class DataManager extends AbstractTableModel implements Model {
         return dataFrame.getValue(columnName, row);
     }
 
-    public int getNumberOfRows()
-    {
-        return dataFrame.getRowCount();
-    }
 
     @Override
     public int getRowCount() {
@@ -70,5 +66,53 @@ public class DataManager extends AbstractTableModel implements Model {
             return new Color(0xC3D8E5);
         }
         return new Color(0xE5D0C3);
+    }
+
+    public int findOldestPerson() {
+        ArrayList<Integer> alivePatients = getIndexOfPatientsAlive();
+
+        return compareBirthDays("old", alivePatients);
+    }
+
+    private int compareBirthDays(String searchFor, ArrayList<Integer> alivePatients) {
+        int row = -1;
+        String colName = "BIRTHDATE";
+        if (searchFor.equals("old"))
+        {
+            String oldest = "9999-12-31";
+            for (int i = 0; i < alivePatients.size(); i++)
+            {
+                String currentDate = dataFrame.getValue(colName, alivePatients.get(i));
+                if (currentDate.compareTo(oldest) < 0)
+                {
+                    oldest = currentDate;
+                    row = alivePatients.get(i);
+                }
+            }
+        }
+        else
+        {
+            String youngest = "1111-01-01";
+            for (int i = 1; i < alivePatients.size(); i++)
+            {
+                String currentDate = dataFrame.getValue(colName, alivePatients.get(i));
+                if (youngest.compareTo(currentDate) > 0)
+                {
+                    youngest = currentDate;
+                    row = alivePatients.get(i);
+                }
+            }
+        }
+        return row;
+    }
+
+    private ArrayList<Integer> getIndexOfPatientsAlive() {
+        ArrayList<Integer> alivePatients = new ArrayList<>();
+        for (int i = 0; i < dataFrame.getRowCount(); i++)
+        {
+            String deathDate = dataFrame.getValue("DEATHDATE", i);
+            if (deathDate.equals("")) { alivePatients.add(i); }
+        }
+        return alivePatients;
     }
 }

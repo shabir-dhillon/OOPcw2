@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public interface Model {
+    // TODO needed?
     DataFrame loadDataFrame(File fileName);
 
     ArrayList<String> getFieldNames();

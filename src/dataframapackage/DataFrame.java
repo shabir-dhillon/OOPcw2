@@ -10,18 +10,16 @@ public class DataFrame { ;
     public DataFrame() {
         this.dataFrame = new ArrayList<>(); }
 
-    // TODO CHECK IF NEEDED
     public boolean isEmpty()
     {
-        if (dataFrame.size() == 0) return true;
-        return false;
+        return dataFrame.size() == 0;
     }
+
     public void addColumn(String columnName){
         Column new_column = new Column(columnName);
         this.dataFrame.add(new_column);
     }
 
-    // TODO CHECK IF NEEDED
     public String getColumnName(int index) {
         return dataFrame.get(index).getName();
     }
@@ -38,6 +36,10 @@ public class DataFrame { ;
         return null;
     }
 
+    public int getColumnCount()
+    {
+        return dataFrame.size();
+    }
     /*
     the number of rows in a column, all columns should have the same number of
     rows when the frame is fully loaded with data
