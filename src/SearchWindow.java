@@ -74,7 +74,7 @@ public class SearchWindow extends JFrame {
         int searchIndex = searchOptions.getSelectedIndex();
         switch (searchIndex) {
             case 0 -> findOldestPerson();
-            case 1 -> System.out.println(1);
+            case 1 -> findYoungestPerson();
             case 2 -> System.out.println(2);
             case 3 -> System.out.println(3);
             case 4 -> System.out.println(4);
@@ -84,8 +84,20 @@ public class SearchWindow extends JFrame {
         }
     }
 
+    // TODO WHAT IF MULTIPLE PEOPLE ARE YOUNGEST?
+    private void findYoungestPerson() {
+        int result = searchModel.findYoungestPerson();
+        if (result == -1)
+        {
+            JOptionPane.showMessageDialog(getParent(), "No matches found");
+            return ;
+        }
+        String data = searchModel.getColumnValueAt("FIRST", result);
+        //TODO Better display
+        searchResults.append(data);
+    }
+
     private void findOldestPerson() {
-        System.out.println(0);
         int result = searchModel.findOldestPerson();
         if (result == -1)
         {
@@ -93,6 +105,7 @@ public class SearchWindow extends JFrame {
             return ;
         }
         String data = searchModel.getColumnValueAt("FIRST", result);
+        //TODO Better display
         searchResults.append(data);
     }
 

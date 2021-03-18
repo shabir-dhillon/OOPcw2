@@ -96,7 +96,7 @@ public class DataManager extends AbstractTableModel implements Model {
             for (int i = 1; i < alivePatients.size(); i++)
             {
                 String currentDate = dataFrame.getValue(colName, alivePatients.get(i));
-                if (youngest.compareTo(currentDate) > 0)
+                if (currentDate.compareTo(youngest) > 0)
                 {
                     youngest = currentDate;
                     row = alivePatients.get(i);
@@ -114,5 +114,11 @@ public class DataManager extends AbstractTableModel implements Model {
             if (deathDate.equals("")) { alivePatients.add(i); }
         }
         return alivePatients;
+    }
+
+    public int findYoungestPerson() {
+        ArrayList<Integer> alivePatients = getIndexOfPatientsAlive();
+
+        return compareBirthDays("young", alivePatients);
     }
 }
