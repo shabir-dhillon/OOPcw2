@@ -24,15 +24,15 @@ public class SearchWindow extends JFrame {
         pack();
         setSize(420,420);
         setVisible(true);
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                if (JOptionPane.NO_OPTION != JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
-                        "Are you sure you want to exit?", "Confirm Exit",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) { dispose(); }
-                else { setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); }
-            }
-        });
+//        addWindowListener(new WindowAdapter() {
+//            @Override
+//            public void windowClosing(WindowEvent e) {
+//                if (JOptionPane.NO_OPTION != JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
+//                        "Are you sure you want to exit?", "Confirm Exit",
+//                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) { dispose(); }
+//                else { setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); }
+//            }
+//        });
     }
 
     private void getModel(DataManager model) {

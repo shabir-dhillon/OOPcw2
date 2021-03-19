@@ -27,7 +27,7 @@ public class View extends JFrame
     private JFileChooser fileLoader;
     private ArrayList<JCheckBox> filterBoxes;
     private JTable table = new JTable();
-    private ArrayList<Boolean>  columnFilter;
+//    private ArrayList<Boolean>  columnFilter;
     private TableRowSorter<DataManager> sorter;
 
     public View(DataManager model)
@@ -156,7 +156,22 @@ public class View extends JFrame
 
     private void searchButtonClicked() {
         SearchWindow searchWindow = new SearchWindow(model);
-        System.out.println("CLICK");
+        loadBtn.setEnabled(false);
+        searchBtn.setEnabled(false);
+        searchWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (JOptionPane.NO_OPTION != JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
+                        "Are you sure you want to exit?", "Confirm Exit",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE))
+                {
+                    loadBtn.setEnabled(true);
+                    searchBtn.setEnabled(true);
+                    searchWindow.dispose();
+                }
+                else { setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); }
+            }
+        });
     }
 
     private void createButtonPanel()
@@ -226,7 +241,7 @@ public class View extends JFrame
         TableColumn column = null;
         for (int i = 0; i < table.getColumnCount(); i++) {
             column = table.getColumnModel().getColumn(i);
-            column.setPreferredWidth(200);
+            column.setPreferredWidth(300);
         }
     }
 
@@ -272,27 +287,24 @@ public class View extends JFrame
 
     private void submitBtnClicked()
     {
-        // TODO Little big of a lag over here
         System.out.println("CLICK");
-        columnFilter = new ArrayList<>();
+        ArrayList<Boolean>  columnFilter = new ArrayList<>();
         int colCount = model.getColumnCount();
         for (int i = 0; i < colCount; i++) { columnFilter.add(filterBoxes.get(i).isSelected()); }
-//        System.out.println("____________________________");
-        hideFilteredColumns();
-        System.out.println("Exit here");
+        hideFilteredColumns(columnFilter);
+        System.out.println("Column Hide Finished");
     }
 
-    private void hideFilteredColumns() {
+    private void hideFilteredColumns(ArrayList<Boolean>  columnFilter) {
         System.out.println(columnFilter.toString());
         for (int i = 0; i < table.getColumnCount(); i++) {
             if (columnFilter.get(i).equals(false))
             {
-                // TODO
                 adjustColumnWidth(i, 0);
             }
             else
             {
-                adjustColumnWidth(i, 200);
+                adjustColumnWidth(i, 300);
             }
         }
     }
@@ -300,7 +312,7 @@ public class View extends JFrame
     private void adjustColumnWidth(int i, int width) {
         table.getColumnModel().getColumn(i).setMinWidth(width);
         table.getColumnModel().getColumn(i).setMaxWidth(width);
-        table.getColumnModel().getColumn(i).setWidth(width);
+        table.getColumnModel().getColumn(i).setPreferredWidth(width);
     }
 
     public static void main(final String[] args, DataManager mainModel)
