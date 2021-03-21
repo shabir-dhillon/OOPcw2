@@ -19,6 +19,7 @@ public class View extends JFrame
     private JButton loadBtn;
     private JButton submitBtn;
     private JButton searchBtn;
+    private JButton saveBtn;
     private JTextField inputField;
     private JComboBox columnSelection;
     private DataManager model;
@@ -27,7 +28,6 @@ public class View extends JFrame
     private JFileChooser fileLoader;
     private ArrayList<JCheckBox> filterBoxes;
     private JTable table = new JTable();
-//    private ArrayList<Boolean>  columnFilter;
     private TableRowSorter<DataManager> sorter;
 
     public View(DataManager model)
@@ -163,7 +163,7 @@ public class View extends JFrame
             public void windowClosing(WindowEvent e) {
                 if (JOptionPane.NO_OPTION != JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
                         "Are you sure you want to exit?", "Confirm Exit",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE))
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE))
                 {
                     loadBtn.setEnabled(true);
                     searchBtn.setEnabled(true);
@@ -179,11 +179,33 @@ public class View extends JFrame
         loadBtn = new JButton("Load");
         loadBtn.addActionListener((ActionEvent e) -> loadButtonClicked());
         buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.add(loadBtn, BorderLayout.CENTER);
         submitBtn = new JButton("Submit");
         submitBtn.addActionListener((ActionEvent e) -> submitBtnClicked());
         submitBtn.setEnabled(false);
+        saveBtn = new JButton("Save to JSON");
+        saveBtn.addActionListener((ActionEvent e) -> saveBtnClicked());
+        buttonPanel.add(loadBtn, BorderLayout.CENTER);
         buttonPanel.add(submitBtn);
+        buttonPanel.add(saveBtn);
+    }
+
+    private void saveBtnClicked() {
+        fileLoader = new JFileChooser(".");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".json", "json");
+        fileLoader.setFileFilter(filter);
+        fileLoader.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        int response = fileLoader.showSaveDialog(null);
+
+        if (response == JFileChooser.APPROVE_OPTION)
+        {
+            try
+            {
+                // TODO Error Handling
+                File fileToSave = fileLoader.getSelectedFile();
+                model.writeToJson(fileToSave);
+            } catch (Exception e) { JOptionPane.showMessageDialog(getParent(), e.toString()); }
+        }
+        else { JOptionPane.showMessageDialog(getParent(), "No File Selected."); }
     }
 
     private void loadButtonClicked() {
@@ -218,9 +240,8 @@ public class View extends JFrame
     }
 
     private File chooseFileToLoad() {
-        File fileToLoad;
         fileLoader = new JFileChooser(".");
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(".csv", "csv");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".csv or .json", "csv", "json");
         fileLoader.setFileFilter(filter);
         fileLoader.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         int response = fileLoader.showOpenDialog(null);
@@ -229,7 +250,7 @@ public class View extends JFrame
         {
             try
             {
-                fileToLoad = fileLoader.getSelectedFile();
+                File fileToLoad = fileLoader.getSelectedFile();
                 return fileToLoad;
             } catch (Exception e) { JOptionPane.showMessageDialog(getParent(), e.toString()); }
         }

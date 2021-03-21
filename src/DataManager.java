@@ -121,4 +121,9 @@ public class DataManager extends AbstractTableModel implements Model {
 
         return compareBirthDays("young", alivePatients);
     }
+
+    public void writeToJson(File fileToSave) {
+        JsonManager json = new JsonManager(dataFrame);
+        json.writeToJson(fileToSave);
+    }
 }
