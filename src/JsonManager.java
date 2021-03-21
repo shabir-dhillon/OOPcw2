@@ -85,9 +85,4 @@ public class JsonManager {
             return -1;
         }
     }
-
-
-    public void readFromJson(File fileToLoad)
-    {
-    }
 }

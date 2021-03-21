@@ -22,7 +22,7 @@ public class DataManager extends AbstractTableModel implements Model {
         loader = new DataLoader();
     }
 
-    public DataFrame loadDataFrame(File fileName)
+    public DataFrame loadCSVDataFrame(File fileName)
     {
         dataFrame = loader.loadData(fileName);
         return dataFrame;
@@ -125,5 +125,11 @@ public class DataManager extends AbstractTableModel implements Model {
     public void writeToJson(File fileToSave) {
         JsonManager json = new JsonManager(dataFrame);
         json.writeToJson(fileToSave);
+    }
+
+    public DataFrame loadJsonDataFrame(File fileToLoad) {
+        dataFrame = loader.loadJsonData(fileToLoad);
+        return dataFrame;
+
     }
 }

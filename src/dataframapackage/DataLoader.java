@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 public class DataLoader {
+    DataFrame fileData = new DataFrame();
+    Scanner scanner;
+    String[] columnNames = { "ID", "BIRTHDATE", "DEATHDATE", "SSN", "DRIVERS","PASSPORT" ,"PREFIX" , "FIRST", "LAST", "SUFFIX","MAIDEN" ,"MARITAL" , "RACE" , "ETHNICITY", "GENDER", "BIRTHPLACE", "ADDRESS", "CITY" ,"STATE", "ZIP"};
     public DataFrame loadData(File csvFileName) {
-        DataFrame fileData = new DataFrame();
         try {
             // TODO CLEAN UP
-            Scanner scanner = new Scanner(csvFileName);
+            scanner = new Scanner(csvFileName);
             int i = 0;
             ArrayList<String> colNames = new ArrayList<>();
             while (scanner.hasNextLine()) {
@@ -39,4 +41,69 @@ public class DataLoader {
         return fileData;
     }
 
+    public DataFrame loadJsonData(File fileToLoad) {
+        fileData = intialiseDataFrame();
+        try {
+            // TODO CLEAN UP
+            scanner = new Scanner(fileToLoad);
+            // Structure of every JSON File is the same, first two lines can be ignored
+            scanner.next();
+            scanner.next();
+            while (scanner.hasNextLine()) {
+                if (scanner.nextLine().contains("{"))
+                {
+                    for (int j = 0; j < columnNames.length; j++)
+                    {
+                        String data = scanner.nextLine();
+                        String rowValue;
+                        int start = data.indexOf(":") + 1;
+                        int end = data.length() - 3;
+                        if (data.indexOf(",") == data.length() - 1)
+                        {
+                            rowValue = data.substring(start, end).replace("\"", "");
+                            fileData.addValue(columnNames[j],rowValue);
+                        }
+                        else
+                        {
+                            rowValue = data.substring(start, end + 1).replace("\"", "");
+                            fileData.addValue(columnNames[j],rowValue);
+                        }
+                    }
+                }
+            }
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        return fileData;
+    }
+
+    private DataFrame intialiseDataFrame() {
+        for (String fieldName : columnNames) {
+            fileData.addColumn(fieldName);
+        }
+        return fileData;
+    }
+
 }
+
+/*
+                String data = scanner.nextLine();
+                String rowValue;
+                if (i == fileData.getColumnCount() - 1) { i = 0; }
+                int start = data.indexOf(": ") + 1;
+                int end = data.length() - 3;
+                if (data.indexOf(",") == data.length() - 1)
+                {
+                    rowValue = data.substring(start, end);
+                    fileData.addValue(columnNames[i],rowValue);
+                    i++;
+                }
+                else
+                {
+                    rowValue = data.substring(start, end + 1);
+                    fileData.addValue(columnNames[i],rowValue);
+                    i++;
+                }
+* */

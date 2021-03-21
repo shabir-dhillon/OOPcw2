@@ -210,7 +210,7 @@ public class View extends JFrame
 
     private void loadButtonClicked() {
         File fileToLoad = chooseFileToLoad();
-        model.loadDataFrame(fileToLoad);
+        loadModel(fileToLoad);
         if (fileToLoad != null) {
             table = new JTable(model);
             table.setDefaultRenderer(Object.class, new TableCell());
@@ -224,6 +224,17 @@ public class View extends JFrame
         createFilterPanel();
         submitBtn.setEnabled(true);
         inputField.setEnabled(true);
+    }
+
+    private void loadModel(File fileToLoad) {
+        if (fileToLoad.getName().endsWith(".csv"))
+        {
+            model.loadCSVDataFrame(fileToLoad);
+        }
+        else
+        {
+            model.loadJsonDataFrame(fileToLoad);
+        }
     }
 
     private void revalidateTable() {
