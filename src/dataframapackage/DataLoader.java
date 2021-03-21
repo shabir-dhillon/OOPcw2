@@ -55,19 +55,7 @@ public class DataLoader {
                     for (int j = 0; j < columnNames.length; j++)
                     {
                         String data = scanner.nextLine();
-                        String rowValue;
-                        int start = data.indexOf(":") + 1;
-                        int end = data.length() - 3;
-                        if (data.indexOf(",") == data.length() - 1)
-                        {
-                            rowValue = data.substring(start, end).replace("\"", "");
-                            fileData.addValue(columnNames[j],rowValue);
-                        }
-                        else
-                        {
-                            rowValue = data.substring(start, end + 1).replace("\"", "");
-                            fileData.addValue(columnNames[j],rowValue);
-                        }
+                        addToDataFrame(data, j);
                     }
                 }
             }
@@ -77,6 +65,22 @@ public class DataLoader {
             e.printStackTrace();
         }
         return fileData;
+    }
+
+    private void addToDataFrame(String data, int j) {
+        String rowValue;
+        int start = data.indexOf(":") + 1;
+        int end = data.length() - 3;
+        if (data.indexOf(",") == data.length() - 1)
+        {
+            rowValue = data.substring(start, end).replace("\"", "");
+            fileData.addValue(columnNames[j],rowValue);
+        }
+        else
+        {
+            rowValue = data.substring(start, end + 1).replace("\"", "");
+            fileData.addValue(columnNames[j],rowValue);
+        }
     }
 
     private DataFrame intialiseDataFrame() {
