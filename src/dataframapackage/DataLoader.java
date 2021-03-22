@@ -41,6 +41,8 @@ public class DataLoader {
         return fileData;
     }
 
+
+    // TODO BUG all chracters return one less char
     public DataFrame loadJsonData(File fileToLoad) {
         fileData = intialiseDataFrame();
         try {
@@ -67,10 +69,11 @@ public class DataLoader {
         return fileData;
     }
 
+    // TODO CHECK
     private void addToDataFrame(String data, int j) {
         String rowValue;
         int start = data.indexOf(":") + 1;
-        int end = data.length() - 3;
+        int end = data.length() - 2;
         if (data.indexOf(",") == data.length() - 1)
         {
             rowValue = data.substring(start, end).replace("\"", "");

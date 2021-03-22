@@ -161,7 +161,7 @@ public class View extends JFrame
         searchWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (JOptionPane.NO_OPTION != JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
+                if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
                         "Are you sure you want to exit?", "Confirm Exit",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE))
                 {
