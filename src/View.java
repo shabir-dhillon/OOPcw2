@@ -229,10 +229,13 @@ public class View extends JFrame
     private void loadModel(File fileToLoad) {
         if (fileToLoad.getName().endsWith(".csv"))
         {
+            // TODO DOUBLE MODELS??
+            this.model = new DataManager();
             model.loadCSVDataFrame(fileToLoad);
         }
         else
         {
+            this.model = new DataManager();
             model.loadJsonDataFrame(fileToLoad);
         }
     }
