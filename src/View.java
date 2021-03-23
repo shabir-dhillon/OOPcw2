@@ -20,6 +20,7 @@ public class View extends JFrame
     private JButton submitBtn;
     private JButton searchBtn;
     private JButton saveBtn;
+    private JButton graphBtn;
     private JTextField inputField;
     private JComboBox columnSelection;
     private DataManager model;
@@ -156,8 +157,7 @@ public class View extends JFrame
 
     private void searchButtonClicked() {
         SearchWindow searchWindow = new SearchWindow(model);
-        loadBtn.setEnabled(false);
-        searchBtn.setEnabled(false);
+        newWindowBtnEvent(0);
         searchWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -165,8 +165,7 @@ public class View extends JFrame
                         "Are you sure you want to exit?", "Confirm Exit",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE))
                 {
-                    loadBtn.setEnabled(true);
-                    searchBtn.setEnabled(true);
+                    newWindowBtnEvent(1);
                     searchWindow.dispose();
                 }
                 else { setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); }
@@ -182,11 +181,50 @@ public class View extends JFrame
         submitBtn = new JButton("Submit");
         submitBtn.addActionListener((ActionEvent e) -> submitBtnClicked());
         submitBtn.setEnabled(false);
+        graphBtn = new JButton("Generate Graph");
+        graphBtn.addActionListener((ActionEvent e) -> graphButtonClicked());
+        graphBtn.setEnabled(false);
         saveBtn = new JButton("Save to JSON");
         saveBtn.addActionListener((ActionEvent e) -> saveBtnClicked());
         buttonPanel.add(loadBtn, BorderLayout.CENTER);
         buttonPanel.add(submitBtn);
+        buttonPanel.add(graphBtn);
         buttonPanel.add(saveBtn);
+    }
+
+    private void graphButtonClicked() {
+        System.out.println("CLICK");
+        GraphWindow graphWindow = new GraphWindow(model);
+        newWindowBtnEvent(0);
+        graphWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
+                        "Are you sure you want to exit?", "Confirm Exit",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+                    newWindowBtnEvent(1);
+                    graphWindow.dispose();
+                } else {
+                    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                }
+            }
+        });
+    }
+
+    private void newWindowBtnEvent(int option)
+    {
+        if (option == 1)
+        {
+            loadBtn.setEnabled(true);
+            graphBtn.setEnabled(true);
+            searchBtn.setEnabled(true);
+        }
+        else
+        {
+            loadBtn.setEnabled(false);
+            graphBtn.setEnabled(false);
+            searchBtn.setEnabled(false);
+        }
     }
 
     private void saveBtnClicked() {
@@ -222,8 +260,13 @@ public class View extends JFrame
             mainPanel.remove(scrollFilter);
         }
         createFilterPanel();
+        reEnableBtns();
+    }
+
+    private void reEnableBtns() {
         submitBtn.setEnabled(true);
         inputField.setEnabled(true);
+        graphBtn.setEnabled(true);
     }
 
     private void loadModel(File fileToLoad) {

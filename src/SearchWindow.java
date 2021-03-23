@@ -19,7 +19,7 @@ public class SearchWindow extends JFrame {
         super("Advanced Search");
         getModel(model);
         createSearchGUI();
-        setModel();
+        setTextAreaModel();
 
         //-----
         pack();
@@ -27,7 +27,7 @@ public class SearchWindow extends JFrame {
         setVisible(true);
     }
 
-    private void setModel() {
+    private void setTextAreaModel() {
         listModel = new DefaultListModel<String>();
         list.setModel(listModel);
     }
@@ -163,6 +163,7 @@ public class SearchWindow extends JFrame {
     }
 
     private void peopleBornInTheSameYear() {
+        clearTextArea();
         HashMap[] birthsPerYear = searchModel.peopleBornInTheSameYear();
         HashMap<String, Integer> yearlyBirths = birthsPerYear[0];
         HashMap<String, String> patients =  birthsPerYear[1];
