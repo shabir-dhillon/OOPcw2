@@ -88,8 +88,14 @@ public class SearchWindow extends JFrame {
         }
     }
 
+    private void clearTextArea()
+    {
+        listModel.clear();
+    }
+
     // TODO WHAT IF MULTIPLE PEOPLE ARE YOUNGEST?
     private void findYoungestPerson() {
+        clearTextArea();
         int result = searchModel.findYoungestPerson();
         if (result == -1)
         {
@@ -102,6 +108,7 @@ public class SearchWindow extends JFrame {
     }
 
     private void findOldestPerson() {
+        clearTextArea();
         int result = searchModel.findOldestPerson();
         if (result == -1)
         {
@@ -114,6 +121,7 @@ public class SearchWindow extends JFrame {
     }
 
     private void populationOfCities() {
+        clearTextArea();
         HashMap<String, Integer> cityPopulation = searchModel.populationOfCities();
 
         for (String i : cityPopulation.keySet()) {
@@ -123,6 +131,7 @@ public class SearchWindow extends JFrame {
     }
 
     private void numberOfPeopleInTheSamePlace() {
+        clearTextArea();
         HashMap<String, Integer> birthPlaces = searchModel.numberOfPeopleInTheSamePlace();
 
         for (String i : birthPlaces.keySet()) {
@@ -132,6 +141,7 @@ public class SearchWindow extends JFrame {
     }
 
     private void findMaritalStatusOfAllPatients() {
+        clearTextArea();
         HashMap<String, Integer> maritalStatus = searchModel.findMaritalStatusOfAllPatients();
 
         for (String i : maritalStatus.keySet()) {
@@ -140,13 +150,14 @@ public class SearchWindow extends JFrame {
     }
 
     private void peopleWhoDiedInTheSameYear() {
+        clearTextArea();
         HashMap[] deathsPerYear = searchModel.peopleWhoDiedInTheSameYear();
         HashMap<String, Integer> yearlyDeaths = deathsPerYear[0];
         HashMap<String, String> deadPatients =  deathsPerYear[1];
 
         for (String i : yearlyDeaths.keySet()) {
             listModel.addElement(i + " : " + yearlyDeaths.get(i));
-            listModel.addElement(deadPatients.get(i));
+            addPatientInfoToModel(deadPatients.get(i));
             listModel.addElement("-------------------------------------------");
         }
     }
@@ -158,8 +169,17 @@ public class SearchWindow extends JFrame {
 
         for (String i : yearlyBirths.keySet()) {
             listModel.addElement(i + " : " + yearlyBirths.get(i));
-            listModel.addElement(patients.get(i));
+            addPatientInfoToModel(patients.get(i));
             listModel.addElement("-------------------------------------------");
+        }
+    }
+
+    private void addPatientInfoToModel(String patientData)
+    {
+        String[] data = patientData.split(",", -1);
+        for (String d : data)
+        {
+            listModel.addElement(d);
         }
     }
 
