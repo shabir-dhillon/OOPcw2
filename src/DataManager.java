@@ -6,10 +6,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.HashMap;
 
 public class DataManager extends AbstractTableModel implements Model {
 // TODO add override
@@ -123,8 +121,8 @@ public class DataManager extends AbstractTableModel implements Model {
         return compareBirthDays("young", alivePatients);
     }
 
-    public HashMap<String, Integer> populationOfCities() {
-        HashMap<String, Integer> cityPopulation = new HashMap<String, Integer>();
+    public TreeMap<String, Integer> populationOfCities() {
+        TreeMap<String, Integer> cityPopulation = new TreeMap<String, Integer>();
         for (int i = 0; i < dataFrame.getRowCount(); i++)
         {
             String city = dataFrame.getValue("CITY", i);
@@ -138,8 +136,8 @@ public class DataManager extends AbstractTableModel implements Model {
         return cityPopulation;
     }
 
-    public HashMap<String, Integer> numberOfPeopleInTheSamePlace() {
-        HashMap<String, Integer> birthPlaces = new HashMap<String, Integer>();
+    public TreeMap<String, Integer> numberOfPeopleInTheSamePlace() {
+        TreeMap<String, Integer> birthPlaces = new TreeMap<String, Integer>();
         for (int i = 0; i < dataFrame.getRowCount(); i++)
         {
             String city = dataFrame.getValue("BIRTHPLACE", i);
@@ -153,8 +151,8 @@ public class DataManager extends AbstractTableModel implements Model {
         return birthPlaces;
     }
 
-    public HashMap<String, Integer> findMaritalStatusOfAllPatients() {
-        HashMap<String, Integer> maritalStatus = new HashMap<String, Integer>();
+    public TreeMap<String, Integer> findMaritalStatusOfAllPatients() {
+        TreeMap<String, Integer> maritalStatus = new TreeMap<>();
         for (int i = 0; i < dataFrame.getRowCount(); i++)
         {
             String marital = setFieldName( dataFrame.getValue("MARITAL", i), dataFrame.getValue("GENDER", i));
@@ -193,15 +191,16 @@ public class DataManager extends AbstractTableModel implements Model {
         return marital;
     }
 
-    public HashMap[] peopleWhoDiedInTheSameYear() {
-        HashMap<String, Integer> yearlyDeaths = new HashMap<>();
-        HashMap<String, String> deadPatients = new HashMap<>();
+    public TreeMap[] peopleWhoDiedInTheSameYear() {
+        TreeMap<Integer, Integer> yearlyDeaths = new TreeMap<>();
+        TreeMap<Integer, String> deadPatients = new TreeMap<>();
+
         for (int i = 0; i < dataFrame.getRowCount(); i++)
         {
             String date = dataFrame.getValue("DEATHDATE", i);
             if (date.equals("")) continue;
             int end = date.indexOf("-");
-            String year = date.substring(0 , end);
+            int year = Integer.parseInt(date.substring(0 , end));
             String name = dataFrame.getValue("FIRST", i) + " " + dataFrame.getValue("LAST", i);
 
             if (deadPatients.containsKey(year) && yearlyDeaths.containsKey(year))
@@ -215,14 +214,14 @@ public class DataManager extends AbstractTableModel implements Model {
                     deadPatients.put(year, name);
                 }
         }
-        HashMap[] deathsPerYear = new HashMap[]{yearlyDeaths, deadPatients};
-        return deathsPerYear;
 
+        TreeMap[] deathsPerYear = new TreeMap[]{yearlyDeaths, deadPatients};
+        return deathsPerYear;
     }
 
-    public HashMap[] peopleBornInTheSameYear() {
-        HashMap<String, Integer> yearlyBirths = new HashMap<>();
-        HashMap<String, String> patients = new HashMap<>();
+    public TreeMap[] peopleBornInTheSameYear() {
+        TreeMap<String, Integer> yearlyBirths = new TreeMap<>();
+        TreeMap<String, String> patients = new TreeMap<>();
         for (int i = 0; i < dataFrame.getRowCount(); i++)
         {
             String date = dataFrame.getValue("BIRTHDATE", i);
@@ -241,7 +240,7 @@ public class DataManager extends AbstractTableModel implements Model {
                 patients.put(year, name);
             }
         }
-        HashMap[] birthsPerYear = new HashMap[]{yearlyBirths, patients};
+        TreeMap[] birthsPerYear = new TreeMap[]{yearlyBirths, patients};
         return birthsPerYear;
     }
 

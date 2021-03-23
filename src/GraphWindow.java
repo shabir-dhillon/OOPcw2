@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class GraphWindow extends JFrame {
     private JButton searchBtn;
@@ -10,7 +11,7 @@ public class GraphWindow extends JFrame {
     private JPanel topPanel;
     private JPanel centerPanel;
     private DataManager searchModel;
-    private DefaultListModel<String> listModel;
+    private GraphicsPanel graph;
 
     GraphWindow(DataManager model) {
         super("Advanced Search");
@@ -20,6 +21,7 @@ public class GraphWindow extends JFrame {
         //-----
         pack();
         setSize(800,600);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -38,16 +40,13 @@ public class GraphWindow extends JFrame {
     private void createCenterPanel() {
         // TODO new to change layout?
         centerPanel = new JPanel(new BorderLayout());
-
     }
 
     private void createTopPanel() {
         topPanel = new JPanel(new FlowLayout());
-        String[] options = { "Find the population of each city", "Number of People born in the same city", "Number of people born in the same year",
-                "Number of People who died in the same year", "Marital Status of people"};
+        String[] options = { "Find the population of each city", "Number of People who died in the same year", "Marital Status of people"};
         searchOptions = new JComboBox(options);
         searchBtn = new JButton("Search");
-        searchBtn.setSize(new Dimension(200,100));
         searchBtn.addActionListener((ActionEvent e) -> searchBtnClicked());
         topPanel.add(searchOptions);
         topPanel.add(searchBtn);
@@ -59,33 +58,22 @@ public class GraphWindow extends JFrame {
         int searchIndex = searchOptions.getSelectedIndex();
         switch (searchIndex) {
             case 0 -> populationOfCities();
-            case 1 -> numberOfPeopleInTheSamePlace();
-            case 2 -> peopleBornInTheSameYear();
-            case 3 -> peopleWhoDiedInTheSameYear();
-            case 4 -> findMaritalStatusOfAllPatients();
+            case 1 -> peopleWhoDiedInTheSameYear();
+            case 2 -> findMaritalStatusOfAllPatients();
         }
     }
 
     private void populationOfCities() {
-        HashMap<String, Integer> cityPopulation = searchModel.populationOfCities();
+        TreeMap<String, Integer> cityPopulation = searchModel.populationOfCities();
 
         for (String i : cityPopulation.keySet()) {
             System.out.println(i + " : " + cityPopulation.get(i));
         }
-
     }
 
-    private void numberOfPeopleInTheSamePlace() {
-        HashMap<String, Integer> birthPlaces = searchModel.numberOfPeopleInTheSamePlace();
-
-        for (String i : birthPlaces.keySet()) {
-            System.out.println(i + " : " + birthPlaces.get(i));
-        }
-
-    }
 
     private void findMaritalStatusOfAllPatients() {
-        HashMap<String, Integer> maritalStatus = searchModel.findMaritalStatusOfAllPatients();
+        TreeMap<String, Integer> maritalStatus = searchModel.findMaritalStatusOfAllPatients();
 
         for (String i : maritalStatus.keySet()) {
             System.out.println(i + " : " + maritalStatus.get(i));
@@ -93,27 +81,11 @@ public class GraphWindow extends JFrame {
     }
 
     private void peopleWhoDiedInTheSameYear() {
-        HashMap[] deathsPerYear = searchModel.peopleWhoDiedInTheSameYear();
-        HashMap<String, Integer> yearlyDeaths = deathsPerYear[0];
-        HashMap<String, String> deadPatients =  deathsPerYear[1];
-
-        for (String i : yearlyDeaths.keySet()) {
-            System.out.println(i + " : " + yearlyDeaths.get(i));
-            addPatientInfoToModel(deadPatients.get(i));
-            System.out.println("-------------------------------------------");
-        }
-    }
-
-    private void peopleBornInTheSameYear() {
-        HashMap[] birthsPerYear = searchModel.peopleBornInTheSameYear();
-        HashMap<String, Integer> yearlyBirths = birthsPerYear[0];
-        HashMap<String, String> patients =  birthsPerYear[1];
-
-        for (String i : yearlyBirths.keySet()) {
-            System.out.println(i + " : " + yearlyBirths.get(i));
-            addPatientInfoToModel(patients.get(i));
-            System.out.println("-------------------------------------------");
-        }
+        graph = new GraphicsPanel(searchModel);
+        centerPanel.add(graph, BorderLayout.CENTER);
+        centerPanel.revalidate();
+        centerPanel.repaint();
+        backPanel.updateUI();
     }
 
     private void addPatientInfoToModel(String patientData)
@@ -129,6 +101,7 @@ public class GraphWindow extends JFrame {
         backPanel = new JPanel(new BorderLayout());
         backPanel.add(centerPanel, BorderLayout.CENTER);
         backPanel.add(topPanel, BorderLayout.NORTH);
+        backPanel.setBorder(BorderFactory.createEmptyBorder(20,10, 10, 10));
         add(backPanel);
     }
 }

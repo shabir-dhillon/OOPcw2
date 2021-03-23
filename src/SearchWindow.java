@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 public class SearchWindow extends JFrame {
     private JButton searchBtn;
@@ -120,9 +120,10 @@ public class SearchWindow extends JFrame {
         listModel.addElement(data);
     }
 
+    // TODO TREEMAP
     private void populationOfCities() {
         clearTextArea();
-        HashMap<String, Integer> cityPopulation = searchModel.populationOfCities();
+        TreeMap<String, Integer> cityPopulation = searchModel.populationOfCities();
 
         for (String i : cityPopulation.keySet()) {
             listModel.addElement(i + " : " + cityPopulation.get(i));
@@ -132,7 +133,7 @@ public class SearchWindow extends JFrame {
 
     private void numberOfPeopleInTheSamePlace() {
         clearTextArea();
-        HashMap<String, Integer> birthPlaces = searchModel.numberOfPeopleInTheSamePlace();
+        TreeMap<String, Integer> birthPlaces = searchModel.numberOfPeopleInTheSamePlace();
 
         for (String i : birthPlaces.keySet()) {
             listModel.addElement(i + " : " + birthPlaces.get(i));
@@ -142,7 +143,7 @@ public class SearchWindow extends JFrame {
 
     private void findMaritalStatusOfAllPatients() {
         clearTextArea();
-        HashMap<String, Integer> maritalStatus = searchModel.findMaritalStatusOfAllPatients();
+        TreeMap<String, Integer> maritalStatus = searchModel.findMaritalStatusOfAllPatients();
 
         for (String i : maritalStatus.keySet()) {
             listModel.addElement(i + " : " + maritalStatus.get(i));
@@ -151,11 +152,11 @@ public class SearchWindow extends JFrame {
 
     private void peopleWhoDiedInTheSameYear() {
         clearTextArea();
-        HashMap[] deathsPerYear = searchModel.peopleWhoDiedInTheSameYear();
-        HashMap<String, Integer> yearlyDeaths = deathsPerYear[0];
-        HashMap<String, String> deadPatients =  deathsPerYear[1];
+        TreeMap[] deathsPerYear = searchModel.peopleWhoDiedInTheSameYear();
+        TreeMap<Integer, Integer> yearlyDeaths = deathsPerYear[0];
+        TreeMap<Integer, String> deadPatients =  deathsPerYear[1];
 
-        for (String i : yearlyDeaths.keySet()) {
+        for (Integer i : yearlyDeaths.keySet()) {
             listModel.addElement(i + " : " + yearlyDeaths.get(i));
             addPatientInfoToModel(deadPatients.get(i));
             listModel.addElement("-------------------------------------------");
@@ -164,9 +165,9 @@ public class SearchWindow extends JFrame {
 
     private void peopleBornInTheSameYear() {
         clearTextArea();
-        HashMap[] birthsPerYear = searchModel.peopleBornInTheSameYear();
-        HashMap<String, Integer> yearlyBirths = birthsPerYear[0];
-        HashMap<String, String> patients =  birthsPerYear[1];
+        TreeMap[] birthsPerYear = searchModel.peopleBornInTheSameYear();
+        TreeMap<String, Integer> yearlyBirths = birthsPerYear[0];
+        TreeMap<String, String> patients =  birthsPerYear[1];
 
         for (String i : yearlyBirths.keySet()) {
             listModel.addElement(i + " : " + yearlyBirths.get(i));
