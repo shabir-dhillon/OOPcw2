@@ -19,7 +19,7 @@ public class GraphWindow extends JFrame {
 
         //-----
         pack();
-        setSize(650,600);
+        setSize(750,700);
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -39,6 +39,7 @@ public class GraphWindow extends JFrame {
     private void createCenterPanel() {
         // TODO new to change layout?
         centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setPreferredSize(new Dimension(600,600));
     }
 
     private void createTopPanel() {
@@ -73,11 +74,11 @@ public class GraphWindow extends JFrame {
 
 
     private void findMaritalStatusOfAllPatients() {
-        TreeMap<String, Integer> maritalStatus = searchModel.findMaritalStatusOfAllPatients();
-
-        for (String i : maritalStatus.keySet()) {
-            System.out.println(i + " : " + maritalStatus.get(i));
-        }
+        graph = new PieChart(searchModel);
+        centerPanel.add(graph, BorderLayout.CENTER);
+        centerPanel.revalidate();
+        centerPanel.repaint();
+        backPanel.updateUI();
     }
 
     private void peopleWhoDiedInTheSameYear() {

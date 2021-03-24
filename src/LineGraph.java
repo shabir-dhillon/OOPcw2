@@ -7,7 +7,7 @@ import javax.swing.*;
 public class LineGraph extends JPanel {
     private DataManager graphModel;
     final int WIDTH = 600;
-    final int HEIGHT = 400;
+    final int HEIGHT = 600;
 
     public LineGraph(DataManager model)
     {
@@ -29,15 +29,17 @@ public class LineGraph extends JPanel {
         int y = 300;
         int i = 0;
 
-        int offset = 0;
+        int offset;
         int maxValue = getMaxValue(deathsPerYear);
 
+        // TODO
         if (maxValue < 10)
         {
             offset = 20;
         }
         else if (maxValue > 100)
         {
+            // How to account for the smaller values?
             offset = 1;
         }
         else

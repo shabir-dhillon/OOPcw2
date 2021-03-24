@@ -183,7 +183,7 @@ public class DataManager extends AbstractTableModel implements Model {
             else { marital = "Unknown-" + marital;}
         }
         else {
-            marital = " Unknown ";
+            marital = "Unknown";
             if (gender.equals("M")) { marital = "Male-" + marital;}
             else if (gender.equals("F")) { marital = "Female-" + marital;}
             else { marital = "Unknown-" + marital;}

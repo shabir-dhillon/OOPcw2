@@ -94,23 +94,3 @@ public class DataLoader {
     }
 
 }
-
-/*
-                String data = scanner.nextLine();
-                String rowValue;
-                if (i == fileData.getColumnCount() - 1) { i = 0; }
-                int start = data.indexOf(": ") + 1;
-                int end = data.length() - 3;
-                if (data.indexOf(",") == data.length() - 1)
-                {
-                    rowValue = data.substring(start, end);
-                    fileData.addValue(columnNames[i],rowValue);
-                    i++;
-                }
-                else
-                {
-                    rowValue = data.substring(start, end + 1);
-                    fileData.addValue(columnNames[i],rowValue);
-                    i++;
-                }
-* */
