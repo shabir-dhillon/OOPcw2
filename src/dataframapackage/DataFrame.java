@@ -15,7 +15,9 @@ public class DataFrame { ;
         return dataFrame.size() == 0;
     }
 
-    public void addColumn(String columnName){
+    // TODO IS THIS CORRECT?
+    public void addColumn(String columnName)
+    {
         Column new_column = new Column(columnName);
         this.dataFrame.add(new_column);
     }
@@ -28,9 +30,7 @@ public class DataFrame { ;
         ArrayList<String> columnNames = new ArrayList<>();
         if (dataFrame.size() > 0)
         {
-            for (Column col:dataFrame){
-                columnNames.add(col.getName());
-            }
+            for (Column col:dataFrame){ columnNames.add(col.getName()); }
             return columnNames;
         }
         return null;
@@ -46,7 +46,15 @@ public class DataFrame { ;
      */
     public int getRowCount() {
         if (dataFrame.size() == 0) return 0;
-        return dataFrame.get(0).getSize();
+        int rowCount = dataFrame.get(0).getSize();
+        for (Column column : dataFrame) {
+            if (rowCount != column.getSize()) {
+                // This is to prevent using a DataFrame that has columns of different row counts.
+                rowCount = 0;
+                break;
+            }
+        }
+        return rowCount;
     }
 
     public String getValue(String columnName,int row) {

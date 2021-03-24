@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 public class GraphWindow extends JFrame {
@@ -11,7 +10,7 @@ public class GraphWindow extends JFrame {
     private JPanel topPanel;
     private JPanel centerPanel;
     private DataManager searchModel;
-    private GraphicsPanel graph;
+    private JPanel graph;
 
     GraphWindow(DataManager model) {
         super("Advanced Search");
@@ -20,7 +19,7 @@ public class GraphWindow extends JFrame {
 
         //-----
         pack();
-        setSize(800,600);
+        setSize(650,600);
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -69,6 +68,7 @@ public class GraphWindow extends JFrame {
         for (String i : cityPopulation.keySet()) {
             System.out.println(i + " : " + cityPopulation.get(i));
         }
+        System.out.println(cityPopulation.size());
     }
 
 
@@ -81,7 +81,7 @@ public class GraphWindow extends JFrame {
     }
 
     private void peopleWhoDiedInTheSameYear() {
-        graph = new GraphicsPanel(searchModel);
+        graph = new LineGraph(searchModel);
         centerPanel.add(graph, BorderLayout.CENTER);
         centerPanel.revalidate();
         centerPanel.repaint();
