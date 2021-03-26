@@ -5,8 +5,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 public interface Model {
-    // TODO needed?
-    // TODO NOT NEEDED
     DataFrame loadCSVDataFrame(File fileName);
 
     ArrayList<String> getFieldNames();

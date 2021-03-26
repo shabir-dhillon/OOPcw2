@@ -39,12 +39,12 @@ public class GraphWindow extends JFrame {
     private void createCenterPanel() {
         // TODO new to change layout?
         centerPanel = new JPanel(new BorderLayout());
-        centerPanel.setPreferredSize(new Dimension(600,600));
     }
 
     private void createTopPanel() {
         topPanel = new JPanel(new FlowLayout());
-        String[] options = { "Find the population of each city", "Number of People who died in the same year", "Marital Status of people"};
+        String[] options = { "Population of each city", "Line Graph of Yearly Deaths", "Pie Chart of Patient Marital Status",
+                            "Pie Chart of All Races", "Pie Chart of Gender Distribution"};
         searchOptions = new JComboBox(options);
         searchBtn = new JButton("Search");
         searchBtn.addActionListener((ActionEvent e) -> searchBtnClicked());
@@ -60,6 +60,8 @@ public class GraphWindow extends JFrame {
             case 0 -> populationOfCities();
             case 1 -> peopleWhoDiedInTheSameYear();
             case 2 -> findMaritalStatusOfAllPatients();
+            case 3 -> findAllRaces();
+            case 4 -> findGenderDistribution();
         }
     }
 
@@ -74,7 +76,8 @@ public class GraphWindow extends JFrame {
 
 
     private void findMaritalStatusOfAllPatients() {
-        graph = new PieChart(searchModel);
+        TreeMap<String, Integer> maritalStatus = searchModel.findMaritalStatusOfAllPatients();
+        graph = new PieChart(maritalStatus);
         centerPanel.add(graph, BorderLayout.CENTER);
         centerPanel.revalidate();
         centerPanel.repaint();
@@ -82,7 +85,7 @@ public class GraphWindow extends JFrame {
     }
 
     private void peopleWhoDiedInTheSameYear() {
-        graph = new LineGraph(searchModel);
+        graph = new BarChart(searchModel);
         centerPanel.add(graph, BorderLayout.CENTER);
         centerPanel.revalidate();
         centerPanel.repaint();
@@ -96,6 +99,24 @@ public class GraphWindow extends JFrame {
         {
             System.out.println(d);
         }
+    }
+
+    private void findAllRaces() {
+        TreeMap<String, Integer> patientRaces = searchModel.findAllRaces();
+        graph = new PieChart(patientRaces);
+        centerPanel.add(graph, BorderLayout.CENTER);
+        centerPanel.revalidate();
+        centerPanel.repaint();
+        backPanel.updateUI();
+    }
+
+    private void findGenderDistribution() {
+        TreeMap<String, Integer> genderData = searchModel.findGenderData();
+        graph = new PieChart(genderData);
+        centerPanel.add(graph, BorderLayout.CENTER);
+        centerPanel.revalidate();
+        centerPanel.repaint();
+        backPanel.updateUI();
     }
 
     private void createBackPanel() {

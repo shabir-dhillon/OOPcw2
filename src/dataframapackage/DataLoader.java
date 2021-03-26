@@ -8,7 +8,7 @@ public class DataLoader {
     DataFrame fileData = new DataFrame();
     Scanner scanner;
     String[] columnNames = { "ID", "BIRTHDATE", "DEATHDATE", "SSN", "DRIVERS","PASSPORT" ,"PREFIX" , "FIRST", "LAST", "SUFFIX","MAIDEN" ,"MARITAL" , "RACE" , "ETHNICITY", "GENDER", "BIRTHPLACE", "ADDRESS", "CITY" ,"STATE", "ZIP"};
-    public DataFrame loadData(File csvFileName) {
+    public DataFrame loadCSVData(File csvFileName) {
         try {
             // TODO CLEAN UP
             scanner = new Scanner(csvFileName);

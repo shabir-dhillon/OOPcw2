@@ -55,7 +55,7 @@ public class SearchWindow extends JFrame {
     private void createTopPanel() {
         topPanel = new JPanel(new FlowLayout());
         String[] options = { "Oldest Living Person", "Youngest Living Person", "Find the population of each city", "Number of People born in the same city"
-                , "Number of people born in the same year", "Number of People who died in the same year", "Marital Status of people"};
+                , "Number of people born in the same year", "Number of People who died in the same year", "Marital Status of people", "Find all races"};
         searchOptions = new JComboBox(options);
         searchBtn = new JButton("Search");
         searchBtn.setSize(new Dimension(200,100));
@@ -85,6 +85,8 @@ public class SearchWindow extends JFrame {
             case 4 -> peopleBornInTheSameYear();
             case 5 -> peopleWhoDiedInTheSameYear();
             case 6 -> findMaritalStatusOfAllPatients();
+            case 7 -> findAllRaces();
+            case 8 -> findAllGenders();
         }
     }
 
@@ -184,6 +186,26 @@ public class SearchWindow extends JFrame {
             listModel.addElement(d);
         }
     }
+
+    private void findAllRaces() {
+        clearTextArea();
+        TreeMap<String, Integer> patientRaces = searchModel.findAllRaces();
+
+        for (String i : patientRaces.keySet()) {
+            listModel.addElement(i + " : " + patientRaces.get(i));
+        }
+    }
+
+    private void findAllGenders() {
+        clearTextArea();
+        TreeMap<String, Integer> genders = searchModel.findGenderData();
+
+        for (String i : genders.keySet()) {
+            listModel.addElement(i + " : " + genders.get(i));
+        }
+    }
+
+
 
     private void createBackPanel() {
         backPanel = new JPanel(new BorderLayout());

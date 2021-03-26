@@ -168,7 +168,7 @@ public class View extends JFrame
                     newWindowBtnEvent(1);
                     searchWindow.dispose();
                 }
-                else { setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); }
+                else { searchWindow.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); }
             }
         });
     }
@@ -178,7 +178,7 @@ public class View extends JFrame
         loadBtn = new JButton("Load");
         loadBtn.addActionListener((ActionEvent e) -> loadButtonClicked());
         buttonPanel = new JPanel(new FlowLayout());
-        submitBtn = new JButton("Submit");
+        submitBtn = new JButton("Filter");
         submitBtn.addActionListener((ActionEvent e) -> submitBtnClicked());
         submitBtn.setEnabled(false);
         graphBtn = new JButton("Generate Graph");
@@ -205,7 +205,7 @@ public class View extends JFrame
                     newWindowBtnEvent(1);
                     graphWindow.dispose();
                 } else {
-                    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                    graphWindow.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
                 }
             }
         });
@@ -241,14 +241,28 @@ public class View extends JFrame
                 // TODO Error Handling
                 File fileToSave = fileLoader.getSelectedFile();
                 model.writeToJson(fileToSave);
-            } catch (Exception e) { JOptionPane.showMessageDialog(getParent(), e.toString()); }
+            }
+            catch (Exception e)
+            {
+                JOptionPane.showMessageDialog(getParent(), e.toString());
+            }
         }
-        else { JOptionPane.showMessageDialog(getParent(), "No File Selected."); }
+        else
+            {
+                JOptionPane.showMessageDialog(getParent(), "No File Selected.");
+            }
     }
 
     private void loadButtonClicked() {
         File fileToLoad = chooseFileToLoad();
-        loadModel(fileToLoad);
+        if (fileToLoad == null)
+        {
+            return;
+        }
+        if (loadModel(fileToLoad) == -1)
+        {
+            return;
+        }
         if (fileToLoad != null) {
             table = new JTable(model);
             table.setDefaultRenderer(Object.class, new TableCell());
@@ -269,7 +283,17 @@ public class View extends JFrame
         graphBtn.setEnabled(true);
     }
 
-    private void loadModel(File fileToLoad) {
+    /**
+     *
+     * @param fileToLoad
+     * @return -1 if File does not exists and 1 if File exists
+     */
+    private int loadModel(File fileToLoad) {
+        if (!fileToLoad.exists())
+        {
+            JOptionPane.showMessageDialog(getParent(), "File does not exists.");
+            return -1;
+        }
         this.model = new DataManager();
         if (fileToLoad.getName().endsWith(".csv"))
         {
@@ -279,6 +303,7 @@ public class View extends JFrame
         {
             model.loadJsonDataFrame(fileToLoad);
         }
+        return 1;
     }
 
     private void revalidateTable() {

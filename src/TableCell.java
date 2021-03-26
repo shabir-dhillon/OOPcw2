@@ -4,6 +4,12 @@ import java.awt.*;
 
 class TableCell extends DefaultTableCellRenderer {
 
+    /**
+     *  user (2010). Change the background color of a row in a JTable. [online]
+     *  Stack Overflow. Available at: https://stackoverflow.com/questions/3875607/change-the-background-color-of-a-row-in-a-jtable
+     *  [Accessed 26 Mar. 2021].
+     * ‌
+     */
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         DataManager model = (DataManager) table.getModel();

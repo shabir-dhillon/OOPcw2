@@ -23,7 +23,7 @@ public class DataManager extends AbstractTableModel implements Model {
 
     public DataFrame loadCSVDataFrame(File fileName)
     {
-        dataFrame = loader.loadData(fileName);
+        dataFrame = loader.loadCSVData(fileName);
         return dataFrame;
     }
 
@@ -250,11 +250,43 @@ public class DataManager extends AbstractTableModel implements Model {
     }
 
 
+    public TreeMap<String, Integer> findAllRaces() {
+        TreeMap<String, Integer> patientRaces = new TreeMap<>();
+        for (int i = 0; i < dataFrame.getRowCount(); i++)
+        {
+            String race = dataFrame.getValue("RACE", i);
+
+            if (patientRaces.containsKey(race))
+            {
+                patientRaces.put(race, patientRaces.get(race) + 1);
+            }
+            else { patientRaces.put(race, 1); }
+        }
+
+        return patientRaces;
+    }
+
     // TODO
 
     public DataFrame loadJsonDataFrame(File fileToLoad) {
         dataFrame = loader.loadJsonData(fileToLoad);
         return dataFrame;
 
+    }
+
+    public TreeMap<String, Integer> findGenderData() {
+        TreeMap<String, Integer> gendersData = new TreeMap<>();
+        for (int i = 0; i < dataFrame.getRowCount(); i++)
+        {
+            String gender = dataFrame.getValue("GENDER", i);
+
+            if (gendersData.containsKey(gender))
+            {
+                gendersData.put(gender, gendersData.get(gender) + 1);
+            }
+            else { gendersData.put(gender, 1); }
+        }
+
+        return gendersData;
     }
 }

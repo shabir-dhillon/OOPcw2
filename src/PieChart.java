@@ -3,16 +3,18 @@ import java.awt.*;
 import java.util.TreeMap;
 
 public class PieChart extends JPanel {
+    // It is best practice to never have any more than 7 categories as it becomes harder for the eye to distinguish relativity of size between each section.
+    // Pie chart will not be generated if you have more than 7 fields.
     final Color[] chartColors = {new Color(0x3232FF), new Color(0x6666FF), new Color(0x9999FF), new Color(0xFF3232), new Color(0xFF6666), new Color(0xFF9999) };
     final int WIDTH = 600;
     final int HEIGHT = 600;
-    private DataManager pieModel;
+    private TreeMap<String,Integer> pieModel;
 
 
-    public PieChart (DataManager model)
+    public PieChart (TreeMap<String,Integer> pieChartData)
     {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        this.pieModel = model;
+        this.pieModel = pieChartData;
     }
 
     public void paintComponent(Graphics g)
@@ -20,23 +22,22 @@ public class PieChart extends JPanel {
         super.paintComponent(g);
         this.setBackground(Color.white);
 
-        Graphics circle = (Graphics) g;
+        Graphics2D pieChart = (Graphics2D) g;
 
-        TreeMap<String, Integer> maritalStatus = pieModel.findMaritalStatusOfAllPatients();
-        int[] statusData = new int[maritalStatus.size()];
+        int[] statusData = new int[pieModel.size()];
         int totalSize = 0;
 
         int i = 0;
         int xCoor = 50;
         int yCoor = 20;
-        for (String status: maritalStatus.keySet())
+        for (String status: pieModel.keySet())
         {
-            String dataDescription = status + " (" + maritalStatus.get(status) + ")";
-            circle.setColor(Color.black);
-            circle.drawString(dataDescription, xCoor, yCoor );
-            circle.setColor(chartColors[i]);
-            circle.fillRect(xCoor - 20, yCoor - 10, 15, 15);
-            int data = maritalStatus.get(status);
+            String dataDescription = status + " (" + pieModel.get(status) + ")";
+            pieChart.setColor(Color.BLACK);
+            pieChart.drawString(dataDescription, xCoor, yCoor );
+            pieChart.setColor(chartColors[i]);
+            pieChart.fillRect(xCoor - 20, yCoor - 10, 15, 15);
+            int data = pieModel.get(status);
             statusData[i] = data;
             totalSize += data;
             i++;
@@ -44,7 +45,7 @@ public class PieChart extends JPanel {
         }
 
         i = 0;
-        int[] arcAngles = new int[maritalStatus.size()];
+        int[] arcAngles = new int[pieModel.size()];
         int currentAngle;
         int totalAngle = 0;
         for (Integer data : statusData)
@@ -55,18 +56,17 @@ public class PieChart extends JPanel {
             i++;
         }
 
-        // Todo How to deal with this?
-//        if (totalAngle < 360)
-//        {
-//            arcAngles[arcAngles.length - 1] = arcAngles[arcAngles.length-1] + (360 - totalAngle);
-//        }
-        System.out.println(totalAngle);
+        // This would only be triggered due to an accumalated rounding error
+        if (totalAngle < 360)
+        {
+            arcAngles[arcAngles.length - 1] = arcAngles[arcAngles.length-1] + (360 - totalAngle);
+        }
 
         int startAngle = 0;
         for (int j = 0; j < arcAngles.length; j++)
         {
-            circle.setColor(chartColors[j]);
-            circle.fillArc(200, 150, 300 ,300 ,startAngle ,arcAngles[j]);
+            pieChart.setColor(chartColors[j]);
+            pieChart.fillArc(200, 150, 300 ,300 , startAngle ,arcAngles[j]);
             startAngle += arcAngles[j];
         }
     }
