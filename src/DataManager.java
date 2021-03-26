@@ -9,9 +9,7 @@ import java.io.File;
 import java.util.*;
 import java.util.List;
 
-public class DataManager extends AbstractTableModel implements Model {
-// TODO add override
-// TODO RENAME CLASS
+public class DataManager extends AbstractTableModel {
     private DataFrame dataFrame;
     private DataLoader loader;
 
@@ -32,11 +30,9 @@ public class DataManager extends AbstractTableModel implements Model {
         return dataFrame.getColumnNames();
     }
 
-    @Override
     public String getColumnValueAt(String columnName, int row) {
         return dataFrame.getValue(columnName, row);
     }
-
 
     @Override
     public int getRowCount() {
@@ -58,7 +54,6 @@ public class DataManager extends AbstractTableModel implements Model {
         return dataFrame.getColumnName(columnIndex);
     }
 
-    @Override
     public Color getRowColour(int row) {
         if (row % 2 == 0)
         {
@@ -266,12 +261,16 @@ public class DataManager extends AbstractTableModel implements Model {
         return patientRaces;
     }
 
+    public TreeMap<String, Integer> findAgeDistribution()
+    {
+        AgeDistributionFinder ages = new AgeDistributionFinder(dataFrame);
+        return ages.findAgeDistribution();
+    }
+
     // TODO
 
-    public DataFrame loadJsonDataFrame(File fileToLoad) {
+    public void loadJsonDataFrame(File fileToLoad) {
         dataFrame = loader.loadJsonData(fileToLoad);
-        return dataFrame;
-
     }
 
     public TreeMap<String, Integer> findGenderData() {

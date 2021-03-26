@@ -43,7 +43,7 @@ public class GraphWindow extends JFrame {
 
     private void createTopPanel() {
         topPanel = new JPanel(new FlowLayout());
-        String[] options = { "Population of each city", "Line Graph of Yearly Deaths", "Pie Chart of Patient Marital Status",
+        String[] options = { "Bar Chart Age Distribution", "Line Graph of Yearly Deaths", "Pie Chart of Patient Marital Status",
                             "Pie Chart of All Races", "Pie Chart of Gender Distribution"};
         searchOptions = new JComboBox(options);
         searchBtn = new JButton("Search");
@@ -57,7 +57,7 @@ public class GraphWindow extends JFrame {
     {
         int searchIndex = searchOptions.getSelectedIndex();
         switch (searchIndex) {
-            case 0 -> populationOfCities();
+            case 0 -> displayAgeDistribution();
             case 1 -> peopleWhoDiedInTheSameYear();
             case 2 -> findMaritalStatusOfAllPatients();
             case 3 -> findAllRaces();
@@ -65,15 +65,14 @@ public class GraphWindow extends JFrame {
         }
     }
 
-    private void populationOfCities() {
-        TreeMap<String, Integer> cityPopulation = searchModel.populationOfCities();
-
-        for (String i : cityPopulation.keySet()) {
-            System.out.println(i + " : " + cityPopulation.get(i));
-        }
-        System.out.println(cityPopulation.size());
+    private void displayAgeDistribution() {
+        TreeMap<String, Integer> ages = searchModel.findAgeDistribution();
+        graph = new BarChart(ages);
+        centerPanel.add(graph, BorderLayout.CENTER);
+        centerPanel.revalidate();
+        centerPanel.repaint();
+        backPanel.updateUI();
     }
-
 
     private void findMaritalStatusOfAllPatients() {
         TreeMap<String, Integer> maritalStatus = searchModel.findMaritalStatusOfAllPatients();
@@ -85,20 +84,11 @@ public class GraphWindow extends JFrame {
     }
 
     private void peopleWhoDiedInTheSameYear() {
-        graph = new BarChart(searchModel);
-        centerPanel.add(graph, BorderLayout.CENTER);
-        centerPanel.revalidate();
-        centerPanel.repaint();
-        backPanel.updateUI();
-    }
-
-    private void addPatientInfoToModel(String patientData)
-    {
-        String[] data = patientData.split(",", -1);
-        for (String d : data)
-        {
-            System.out.println(d);
-        }
+//        graph = new BarChart(searchModel);
+//        centerPanel.add(graph, BorderLayout.CENTER);
+//        centerPanel.revalidate();
+//        centerPanel.repaint();
+//        backPanel.updateUI();
     }
 
     private void findAllRaces() {
