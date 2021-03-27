@@ -37,13 +37,12 @@ public class GraphWindow extends JFrame {
     }
 
     private void createCenterPanel() {
-        // TODO new to change layout?
         centerPanel = new JPanel(new BorderLayout());
     }
 
     private void createTopPanel() {
         topPanel = new JPanel(new FlowLayout());
-        String[] options = { "Bar Chart Age Distribution", "Line Graph of Yearly Deaths", "Pie Chart of Patient Marital Status",
+        String[] options = { "Bar Chart Age Distribution", "Pie Chart of Patient Marital Status",
                             "Pie Chart of All Races", "Pie Chart of Gender Distribution"};
         searchOptions = new JComboBox(options);
         searchBtn = new JButton("Search");
@@ -58,55 +57,56 @@ public class GraphWindow extends JFrame {
         int searchIndex = searchOptions.getSelectedIndex();
         switch (searchIndex) {
             case 0 -> displayAgeDistribution();
-            case 1 -> peopleWhoDiedInTheSameYear();
-            case 2 -> findMaritalStatusOfAllPatients();
-            case 3 -> findAllRaces();
-            case 4 -> findGenderDistribution();
+            case 1 -> findMaritalStatusOfAllPatients();
+            case 2 -> findAllRaces();
+            case 3 -> findGenderDistribution();
         }
     }
 
     private void displayAgeDistribution() {
+        checkCenterPanel();
         TreeMap<String, Integer> ages = searchModel.findAgeDistribution();
         graph = new BarChart(ages);
-        centerPanel.add(graph, BorderLayout.CENTER);
+        JScrollPane graphScroller = new JScrollPane(graph, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        centerPanel.add(graphScroller, BorderLayout.CENTER);
+        updateGraphWindow();
+    }
+
+    private void updateGraphWindow() {
         centerPanel.revalidate();
         centerPanel.repaint();
         backPanel.updateUI();
+    }
+
+    private void checkCenterPanel() {
+        if (centerPanel != null)
+        {
+            centerPanel.removeAll();
+        }
     }
 
     private void findMaritalStatusOfAllPatients() {
+        checkCenterPanel();
         TreeMap<String, Integer> maritalStatus = searchModel.findMaritalStatusOfAllPatients();
         graph = new PieChart(maritalStatus);
         centerPanel.add(graph, BorderLayout.CENTER);
-        centerPanel.revalidate();
-        centerPanel.repaint();
-        backPanel.updateUI();
-    }
-
-    private void peopleWhoDiedInTheSameYear() {
-//        graph = new BarChart(searchModel);
-//        centerPanel.add(graph, BorderLayout.CENTER);
-//        centerPanel.revalidate();
-//        centerPanel.repaint();
-//        backPanel.updateUI();
+        updateGraphWindow();
     }
 
     private void findAllRaces() {
+        checkCenterPanel();
         TreeMap<String, Integer> patientRaces = searchModel.findAllRaces();
         graph = new PieChart(patientRaces);
         centerPanel.add(graph, BorderLayout.CENTER);
-        centerPanel.revalidate();
-        centerPanel.repaint();
-        backPanel.updateUI();
+        updateGraphWindow();
     }
 
     private void findGenderDistribution() {
+        checkCenterPanel();
         TreeMap<String, Integer> genderData = searchModel.findGenderData();
         graph = new PieChart(genderData);
         centerPanel.add(graph, BorderLayout.CENTER);
-        centerPanel.revalidate();
-        centerPanel.repaint();
-        backPanel.updateUI();
+        updateGraphWindow();
     }
 
     private void createBackPanel() {
