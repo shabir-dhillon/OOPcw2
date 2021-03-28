@@ -1,6 +1,5 @@
 package dataframapackage;
 import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner; // Import the Scanner class to read text files
@@ -8,7 +7,7 @@ import java.util.Scanner; // Import the Scanner class to read text files
 public class DataLoader {
     DataFrame fileData = new DataFrame();
     Scanner scanner;
-    String[] columnNames = { "ID", "BIRTHDATE", "DEATHDATE", "SSN", "DRIVERS","PASSPORT" ,"PREFIX" , "FIRST", "LAST", "SUFFIX","MAIDEN" ,"MARITAL" , "RACE" , "ETHNICITY", "GENDER", "BIRTHPLACE", "ADDRESS", "CITY" ,"STATE", "ZIP"};
+    List<String> columnNames = new ArrayList<>();
     public DataFrame loadCSVData(File csvFileName) {
         try {
             scanner = new Scanner(csvFileName);
@@ -53,7 +52,6 @@ public class DataLoader {
 
 
     public DataFrame loadJsonData(File fileToLoad) {
-        fileData = intialiseDataFrame();
         try {
             // TODO CLEAN UP
             scanner = new Scanner(fileToLoad);
@@ -73,36 +71,41 @@ public class DataLoader {
         while (scanner.hasNextLine()) {
             if (scanner.nextLine().contains("{"))
             {
-                for (int j = 0; j < columnNames.length; j++)
+                String data = scanner.nextLine();
+                while (!data.contains("}"))
                 {
-                    String data = scanner.nextLine();
-                    addToDataFrame(data, j);
+                    addToDataFrame(data);
+                    data = scanner.nextLine();
                 }
             }
         }
     }
 
-    private void addToDataFrame(String data, int j) {
+    private void addToDataFrame(String data) {
         String rowValue;
+        String colName;
+        int indexOfFirstApostrophe = data.indexOf("\"");
         int start = data.indexOf(":") + 1;
         int end = data.length() - 2;
+        colName = (data.substring(indexOfFirstApostrophe, start - 1)).replace("\"", "");
+        checkColumnExists(colName);
         if (data.indexOf(",") == data.length() - 1)
         {
             rowValue = data.substring(start, end).replace("\"", "");
-            fileData.addValue(columnNames[j],rowValue);
         }
         else
         {
             rowValue = data.substring(start, end + 1).replace("\"", "");
-            fileData.addValue(columnNames[j],rowValue);
         }
+        fileData.addValue(colName,rowValue);
     }
 
-    private DataFrame intialiseDataFrame() {
-        for (String fieldName : columnNames) {
-            fileData.addColumn(fieldName);
+    private void checkColumnExists(String colName) {
+        if (!columnNames.contains(colName))
+        {
+            columnNames.add(colName);
+            fileData.addColumn(colName);
         }
-        return fileData;
     }
 
 }
