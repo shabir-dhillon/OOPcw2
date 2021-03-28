@@ -1,13 +1,10 @@
-import dataframapackage.Column;
 import dataframapackage.DataFrame;
 import dataframapackage.DataLoader;
 
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
-import java.util.List;
 
 public class DataManager extends AbstractTableModel {
     private DataFrame dataFrame;
@@ -19,13 +16,12 @@ public class DataManager extends AbstractTableModel {
         loader = new DataLoader();
     }
 
-    public DataFrame loadCSVDataFrame(File fileName)
+    public void loadCSVDataFrame(File fileName)
     {
         dataFrame = loader.loadCSVData(fileName);
-        return dataFrame;
     }
 
-    public ArrayList<String> getFieldNames()
+    public ArrayList<String> getColumnNames()
     {
         return dataFrame.getColumnNames();
     }
@@ -65,39 +61,7 @@ public class DataManager extends AbstractTableModel {
     public int findOldestPerson() {
         ArrayList<Integer> alivePatients = getIndexOfPatientsAlive();
 
-        return compareBirthDays("old", alivePatients);
-    }
-
-    private int compareBirthDays(String searchFor, ArrayList<Integer> alivePatients) {
-        int row = -1;
-        String colName = "BIRTHDATE";
-        if (searchFor.equals("old"))
-        {
-            String oldest = "9999-12-31";
-            for (int i = 0; i < alivePatients.size(); i++)
-            {
-                String currentDate = dataFrame.getValue(colName, alivePatients.get(i));
-                if (currentDate.compareTo(oldest) < 0)
-                {
-                    oldest = currentDate;
-                    row = alivePatients.get(i);
-                }
-            }
-        }
-        else
-        {
-            String youngest = "1111-01-01";
-            for (int i = 1; i < alivePatients.size(); i++)
-            {
-                String currentDate = dataFrame.getValue(colName, alivePatients.get(i));
-                if (currentDate.compareTo(youngest) > 0)
-                {
-                    youngest = currentDate;
-                    row = alivePatients.get(i);
-                }
-            }
-        }
-        return row;
+        return CompareBirthdays.compareBirthDays("old", alivePatients, dataFrame);
     }
 
     private ArrayList<Integer> getIndexOfPatientsAlive() {
@@ -113,7 +77,7 @@ public class DataManager extends AbstractTableModel {
     public int findYoungestPerson() {
         ArrayList<Integer> alivePatients = getIndexOfPatientsAlive();
 
-        return compareBirthDays("young", alivePatients);
+        return CompareBirthdays.compareBirthDays("young", alivePatients, dataFrame);
     }
 
     public TreeMap<String, Integer> populationOfCities() {
@@ -266,8 +230,6 @@ public class DataManager extends AbstractTableModel {
         AgeDistributionFinder ages = new AgeDistributionFinder(dataFrame);
         return ages.findAgeDistribution();
     }
-
-    // TODO
 
     public void loadJsonDataFrame(File fileToLoad) {
         dataFrame = loader.loadJsonData(fileToLoad);

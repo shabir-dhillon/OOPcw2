@@ -122,7 +122,6 @@ public class SearchWindow extends JFrame {
         listModel.addElement(data);
     }
 
-    // TODO TREEMAP
     private void populationOfCities() {
         clearTextArea();
         TreeMap<String, Integer> cityPopulation = searchModel.populationOfCities();

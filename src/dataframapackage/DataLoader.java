@@ -2,6 +2,7 @@ package dataframapackage;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner; // Import the Scanner class to read text files
 
 public class DataLoader {
@@ -10,39 +11,47 @@ public class DataLoader {
     String[] columnNames = { "ID", "BIRTHDATE", "DEATHDATE", "SSN", "DRIVERS","PASSPORT" ,"PREFIX" , "FIRST", "LAST", "SUFFIX","MAIDEN" ,"MARITAL" , "RACE" , "ETHNICITY", "GENDER", "BIRTHPLACE", "ADDRESS", "CITY" ,"STATE", "ZIP"};
     public DataFrame loadCSVData(File csvFileName) {
         try {
-            // TODO CLEAN UP
             scanner = new Scanner(csvFileName);
-            int i = 0;
-            ArrayList<String> colNames = new ArrayList<>();
-            while (scanner.hasNextLine()) {
-                String data = scanner.nextLine();
-                String[] fieldData = data.split(",", -1);
-                if (i == 0) {
-                    for (String fieldName : fieldData) {
-                        colNames.add(fieldName);
-                        fileData.addColumn(fieldName);
-                    }
-                    i += 1;
-                    continue;
-                }
-                int j = 0;
-                for (String value : fieldData) {
-                    fileData.addValue(colNames.get(j), value);
-                    j += 1;
-                }
-            }
+            writeDataFromCSV();
             scanner.close();
         } catch (Exception e) {
-            // TODO
-            System.out.println("An error occurred.");
+            System.out.println("An error occurred, File could not be opened.");
             e.printStackTrace();
         }
-
         return fileData;
     }
 
+    private void writeDataFromCSV() {
+        int i = 0;
+        List<String> colNames = new ArrayList<>();
+        while (scanner.hasNextLine()) {
+            String data = scanner.nextLine();
+            String[] fieldData = data.split(",", -1);
+            if (i == 0) {
+                createColumn(fieldData, colNames);
+                i += 1;
+                continue;
+            }
+            addRowData(fieldData, colNames);
+        }
+    }
 
-    // TODO BUG all chracters return one less char
+    private void addRowData(String[] fieldData,  List<String> colNames) {
+        int j = 0;
+        for (String value : fieldData) {
+            fileData.addValue(colNames.get(j), value);
+            j += 1;
+        }
+    }
+
+    private void createColumn(String[] fieldData, List<String> colNames) {
+        for (String fieldName : fieldData) {
+            colNames.add(fieldName);
+            fileData.addColumn(fieldName);
+        }
+    }
+
+
     public DataFrame loadJsonData(File fileToLoad) {
         fileData = intialiseDataFrame();
         try {
@@ -51,16 +60,7 @@ public class DataLoader {
             // Structure of every JSON File is the same, first two lines can be ignored
             scanner.next();
             scanner.next();
-            while (scanner.hasNextLine()) {
-                if (scanner.nextLine().contains("{"))
-                {
-                    for (int j = 0; j < columnNames.length; j++)
-                    {
-                        String data = scanner.nextLine();
-                        addToDataFrame(data, j);
-                    }
-                }
-            }
+            writeDataFromJSON();
             scanner.close();
         } catch (Exception e) {
             System.out.println("An error occurred.");
@@ -69,7 +69,19 @@ public class DataLoader {
         return fileData;
     }
 
-    // TODO CHECK
+    private void writeDataFromJSON() {
+        while (scanner.hasNextLine()) {
+            if (scanner.nextLine().contains("{"))
+            {
+                for (int j = 0; j < columnNames.length; j++)
+                {
+                    String data = scanner.nextLine();
+                    addToDataFrame(data, j);
+                }
+            }
+        }
+    }
+
     private void addToDataFrame(String data, int j) {
         String rowValue;
         int start = data.indexOf(":") + 1;

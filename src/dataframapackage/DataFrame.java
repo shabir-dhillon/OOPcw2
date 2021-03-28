@@ -15,7 +15,6 @@ public class DataFrame { ;
         return dataFrame.size() == 0;
     }
 
-    // TODO IS THIS CORRECT?
     public void addColumn(String columnName)
     {
         Column new_column = new Column(columnName);

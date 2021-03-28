@@ -17,7 +17,7 @@ public class View extends JFrame
     private JPanel leftPanel;
     private JPanel mainPanel;
     private JButton loadBtn;
-    private JButton submitBtn;
+    private JButton filterBtn;
     private JButton searchBtn;
     private JButton saveBtn;
     private JButton graphBtn;
@@ -178,16 +178,16 @@ public class View extends JFrame
         loadBtn = new JButton("Load");
         loadBtn.addActionListener((ActionEvent e) -> loadButtonClicked());
         buttonPanel = new JPanel(new FlowLayout());
-        submitBtn = new JButton("Filter");
-        submitBtn.addActionListener((ActionEvent e) -> submitBtnClicked());
-        submitBtn.setEnabled(false);
+        filterBtn = new JButton("Filter");
+        filterBtn.addActionListener((ActionEvent e) -> submitBtnClicked());
+        filterBtn.setEnabled(false);
         graphBtn = new JButton("Generate Graph");
         graphBtn.addActionListener((ActionEvent e) -> graphButtonClicked());
         graphBtn.setEnabled(false);
         saveBtn = new JButton("Save to JSON");
         saveBtn.addActionListener((ActionEvent e) -> saveBtnClicked());
         buttonPanel.add(loadBtn, BorderLayout.CENTER);
-        buttonPanel.add(submitBtn);
+        buttonPanel.add(filterBtn);
         buttonPanel.add(graphBtn);
         buttonPanel.add(saveBtn);
     }
@@ -238,7 +238,6 @@ public class View extends JFrame
         {
             try
             {
-                // TODO Error Handling
                 File fileToSave = fileLoader.getSelectedFile();
                 model.writeToJson(fileToSave);
             }
@@ -278,7 +277,7 @@ public class View extends JFrame
     }
 
     private void reEnableBtns() {
-        submitBtn.setEnabled(true);
+        filterBtn.setEnabled(true);
         inputField.setEnabled(true);
         graphBtn.setEnabled(true);
     }
@@ -376,7 +375,7 @@ public class View extends JFrame
     }
 
     private void getFilterList() {
-        ArrayList<String> boxID = model.getFieldNames();
+        ArrayList<String> boxID = model.getColumnNames();
         for (String s : boxID)
         {
             JCheckBox checkBox = new JCheckBox();

@@ -5,10 +5,10 @@ import java.util.TreeMap;
 public class PieChart extends JPanel {
     // It is best practice to never have any more than 7 categories as it becomes harder for the eye to distinguish relativity of size between each section.
     // Pie chart will not be generated if you have more than 7 fields.
-    final Color[] chartColors = {new Color(0x3232FF), new Color(0x6666FF), new Color(0x9999FF), new Color(0xFF3232), new Color(0xFF6666), new Color(0xFF9999) };
+    final Color[] chartColors = {Color.GREEN, Color.BLUE, Color.RED, Color.PINK, Color.YELLOW, Color.MAGENTA, Color.PINK};
     final int WIDTH = 600;
     final int HEIGHT = 600;
-    private TreeMap<String,Integer> pieModel;
+    private final TreeMap<String,Integer> pieModel;
 
 
     public PieChart (TreeMap<String,Integer> pieChartData)
@@ -25,6 +25,11 @@ public class PieChart extends JPanel {
         Graphics2D pieChart = (Graphics2D) g;
 
         int[] statusData = new int[pieModel.size()];
+        if (pieModel.size() > 7)
+        {
+            JOptionPane.showMessageDialog(getParent(), "Too many fields for a Pie Chart");
+            return;
+        }
         int totalSize = 0;
 
         int i = 0;

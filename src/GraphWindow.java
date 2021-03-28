@@ -19,7 +19,7 @@ public class GraphWindow extends JFrame {
 
         //-----
         pack();
-        setSize(750,700);
+        setSize(1000,750);
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -67,8 +67,7 @@ public class GraphWindow extends JFrame {
         checkCenterPanel();
         TreeMap<String, Integer> ages = searchModel.findAgeDistribution();
         graph = new BarChart(ages);
-        JScrollPane graphScroller = new JScrollPane(graph, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        centerPanel.add(graphScroller, BorderLayout.CENTER);
+        centerPanel.add(graph, BorderLayout.CENTER);
         updateGraphWindow();
     }
 

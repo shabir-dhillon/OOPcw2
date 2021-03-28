@@ -17,8 +17,8 @@ public class BarChart extends JPanel {
 
     public void paintComponent(Graphics g)
     {
-        super.paintComponent(g);
-        this.setBackground(Color.white);
+//        super.paintComponent(g);
+//        this.setBackground(Color.white);
 
 
         int nPoints = graphModel.size();
@@ -53,20 +53,8 @@ public class BarChart extends JPanel {
 
         Arrays.sort(scaleData);
         int minValue = scaleData[0];
-        System.out.print("Max : " + maxValue);
-        System.out.println(" , Min : " + minValue);
         Graphics2D barChart = (Graphics2D) g;
-
-
-//        barChart.drawLine(0,0,600,0);
-//        barChart.drawLine(100,0,100,600);
-//        barChart.drawLine(0,100,600,100);
-//        barChart.drawLine(0,200,600,200);
-//        barChart.drawLine(0,300,600,300);
-//        barChart.drawLine(0,400,600,400);
-//        barChart.drawLine(0,500,600,500);
-//        barChart.drawLine(0,600,600,600);
-//        barChart.drawLine(0,0,600,600);
+        barChart.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
 
         for (int row = 0; row < nPoints; row++){
             barChart.setColor(barColor);
@@ -75,7 +63,7 @@ public class BarChart extends JPanel {
             barChart.drawString(xAxisVariables[row],xPoints[row] + 20, y + 25);
         }
 
-        drawYAxisScale(scaleData, minValue, maxValue);
+        drawYAxisScale(maxValue, y, offset, maxYScaleHeight, barChart);
         barChart.setColor(Color.black);
         barChart.drawLine(75,y,x + 25,y);
         barChart.drawString("Age Group (Years)", x + 40, y);
@@ -83,40 +71,32 @@ public class BarChart extends JPanel {
         barChart.drawString("Frequency", 50, y - maxYScaleHeight - 25);
     }
 
-    private void drawYAxisScale(int[] scaleData, int minValue, int maxValue) {
+    private void drawYAxisScale( int maxValue ,int y, double offset, int maxYScaleHeight, Graphics2D barChart) {
+
+        int maxValueRange = Integer.toString(maxValue).length();
+        double roundingValue = Math.pow(10, maxValueRange-1);
+        maxValue = (int) (((Math.round( maxValue / roundingValue) * roundingValue)));
+
+        int steps = 4;
+        int stepValue = maxValue / steps;
 
 
-
-
-        /**
-         * for loop
-         * barChart.drawLine(75,y,x + 25,y);
-         */
-    }
-
-    private int getMinValue() {
-        int min = 10000;
-        for (String ageGroup : graphModel.keySet()) {
-            int currentValue = graphModel.get(ageGroup);
-            if (currentValue < min)
-            {
-                min = currentValue;
-            }
+        for (int i = 0; i < steps; i++)
+        {
+            maxValue = maxValue - stepValue;
+            barChart.drawString(Integer.toString(maxValue), 40, y - (int)((maxValue)*offset));
         }
-        return min;
     }
 
     private int getMaxValue() {
         int max = -10000;
         for (String ageGroup : graphModel.keySet()) {
             int currentValue = graphModel.get(ageGroup);
-            System.out.print(currentValue + " , ");
             if (currentValue > max)
             {
                 max = currentValue;
             }
         }
-        System.out.println();
         return max;
     }
 
