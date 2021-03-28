@@ -10,12 +10,12 @@ public class SearchWindow extends JFrame {
     private JPanel backPanel;
     private JPanel topPanel;
     private JPanel centerPanel;
-    private DataManager searchModel;
+    private Model searchModel;
     private JScrollPane scroller;
     private JList<String> list;
     private DefaultListModel<String> listModel;
 
-    SearchWindow(DataManager model) {
+    SearchWindow(Model model) {
         super("Advanced Search");
         getModel(model);
         createSearchGUI();
@@ -32,7 +32,7 @@ public class SearchWindow extends JFrame {
         list.setModel(listModel);
     }
 
-    private void getModel(DataManager model) {
+    private void getModel(Model model) {
         searchModel = model;
     }
 

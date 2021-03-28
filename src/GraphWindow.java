@@ -9,10 +9,10 @@ public class GraphWindow extends JFrame {
     private JPanel backPanel;
     private JPanel topPanel;
     private JPanel centerPanel;
-    private DataManager searchModel;
+    private Model searchModel;
     private JPanel graph;
 
-    GraphWindow(DataManager model) {
+    GraphWindow(Model model) {
         super("Advanced Search");
         getModel(model);
         createSearchGUI();
@@ -25,7 +25,7 @@ public class GraphWindow extends JFrame {
     }
 
 
-    private void getModel(DataManager model) {
+    private void getModel(Model model) {
         searchModel = model;
         System.out.println("Model copy");
     }

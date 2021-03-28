@@ -1,7 +1,7 @@
 public class Main {
 
     public static void main(String[] args) {
-            DataManager model = new DataManager();
+            Model model = new Model();
             View view = new View(model);
     }
 }

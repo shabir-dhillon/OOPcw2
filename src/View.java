@@ -23,15 +23,15 @@ public class View extends JFrame
     private JButton graphBtn;
     private JTextField inputField;
     private JComboBox columnSelection;
-    private DataManager model;
+    private Model model;
     private JScrollPane scrollPane;
     private JScrollPane scrollFilter;
     private JFileChooser fileLoader;
     private ArrayList<JCheckBox> filterBoxes;
     private JTable table = new JTable();
-    private TableRowSorter<DataManager> sorter;
+    private TableRowSorter<Model> sorter;
 
-    public View(DataManager model)
+    public View(Model model)
     {
         super("Data Loader");
         setLayout(new BorderLayout());
@@ -54,7 +54,7 @@ public class View extends JFrame
         });
     }
 
-    public void setModel(DataManager model)
+    public void setModel(Model model)
     { this.model = model; }
 
     public void createGUI() {
@@ -129,7 +129,7 @@ public class View extends JFrame
      * ‌
      */
     private void newFilter() {
-        RowFilter<DataManager, Object> rf = null;
+        RowFilter<Model, Object> rf = null;
         int colIndex = columnSelection.getSelectedIndex();
         //If current expression doesn't parse, don't update.
         try {
@@ -315,7 +315,7 @@ public class View extends JFrame
             JOptionPane.showMessageDialog(getParent(), "File does not exists.");
             return -1;
         }
-        this.model = new DataManager();
+        this.model = new Model();
         if (fileToLoad.getName().endsWith(".csv"))
         {
             model.loadCSVDataFrame(fileToLoad);
@@ -434,7 +434,7 @@ public class View extends JFrame
         table.getColumnModel().getColumn(i).setPreferredWidth(width);
     }
 
-    public static void main(final String[] args, DataManager mainModel)
+    public static void main(final String[] args, Model mainModel)
     {
         SwingUtilities.invokeLater(() -> new View(mainModel));
     }

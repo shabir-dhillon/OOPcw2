@@ -12,7 +12,7 @@ class TableCell extends DefaultTableCellRenderer {
      */
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        DataManager model = (DataManager) table.getModel();
+        Model model = (Model) table.getModel();
         Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         comp.setBackground(model.getRowColour(row));
         return comp;
