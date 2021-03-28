@@ -23,7 +23,7 @@ public class SearchWindow extends JFrame {
 
         //-----
         pack();
-        setSize(420,420);
+        setSize(600,600);
         setVisible(true);
     }
 
@@ -34,7 +34,6 @@ public class SearchWindow extends JFrame {
 
     private void getModel(DataManager model) {
         searchModel = model;
-        System.out.println("Model copy");
     }
 
     private void createSearchGUI() {
@@ -46,9 +45,7 @@ public class SearchWindow extends JFrame {
     private void createCenterPanel() {
         searchResults = new JTextArea();
         searchResults.setLayout(new FlowLayout());
-        searchResults.setMinimumSize(new Dimension(100, 100));
-        searchResults.setMaximumSize(new Dimension(800,800));
-        searchResults.setPreferredSize(new Dimension(250,400));
+        searchResults.setPreferredSize(new Dimension(500,400));
         createScrollerPanel();
     }
 
@@ -69,7 +66,7 @@ public class SearchWindow extends JFrame {
         centerPanel = new JPanel();
         list = new JList<String>();
         scroller = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scroller.setPreferredSize(new Dimension(300,200));
+        scroller.setPreferredSize(new Dimension(400,400));
         centerPanel.add(scroller, BorderLayout.CENTER);
     }
 
@@ -125,30 +122,19 @@ public class SearchWindow extends JFrame {
     private void populationOfCities() {
         clearTextArea();
         TreeMap<String, Integer> cityPopulation = searchModel.populationOfCities();
-
-        for (String i : cityPopulation.keySet()) {
-            listModel.addElement(i + " : " + cityPopulation.get(i));
-        }
-
+        displayData(cityPopulation);
     }
 
     private void numberOfPeopleInTheSamePlace() {
         clearTextArea();
         TreeMap<String, Integer> birthPlaces = searchModel.numberOfPeopleInTheSamePlace();
-
-        for (String i : birthPlaces.keySet()) {
-            listModel.addElement(i + " : " + birthPlaces.get(i));
-        }
-
+        displayData(birthPlaces);
     }
 
     private void findMaritalStatusOfAllPatients() {
         clearTextArea();
         TreeMap<String, Integer> maritalStatus = searchModel.findMaritalStatusOfAllPatients();
-
-        for (String i : maritalStatus.keySet()) {
-            listModel.addElement(i + " : " + maritalStatus.get(i));
-        }
+        displayData(maritalStatus);
     }
 
     private void peopleWhoDiedInTheSameYear() {
@@ -189,21 +175,20 @@ public class SearchWindow extends JFrame {
     private void findAllRaces() {
         clearTextArea();
         TreeMap<String, Integer> patientRaces = searchModel.findAllRaces();
-
-        for (String i : patientRaces.keySet()) {
-            listModel.addElement(i + " : " + patientRaces.get(i));
-        }
+        displayData(patientRaces);
     }
 
     private void findAllGenders() {
         clearTextArea();
         TreeMap<String, Integer> genders = searchModel.findGenderData();
-
-        for (String i : genders.keySet()) {
-            listModel.addElement(i + " : " + genders.get(i));
-        }
+        displayData(genders);
     }
 
+    private void displayData(TreeMap<String, Integer> data) {
+        for (String i : data.keySet()) {
+            listModel.addElement(i + " : " + data.get(i));
+        }
+    }
 
 
     private void createBackPanel() {

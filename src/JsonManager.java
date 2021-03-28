@@ -2,13 +2,13 @@ import dataframapackage.DataFrame;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class JsonManager {
     DataFrame model;
+    FileWriter writer;
 
     public JsonManager(DataFrame dataModel) {
         this.model = dataModel;
@@ -30,26 +30,21 @@ public class JsonManager {
 
     private void jsonWriter(File fileToSave) {
         try {
-            FileWriter myWriter = new FileWriter(fileToSave);
-            ArrayList<String> colNames = model.getColumnNames();
-            myWriter.write("{\n\"patients\": [\n");
-            for (int i = 0; i < model.getRowCount(); i++)
+            writer = new FileWriter(fileToSave);
+            writer.write("{\n\"data\": [\n");
+            for (int row = 0; row < model.getRowCount(); row++)
             {
-                if (i == model.getRowCount() - 1)
+                writer.write("{\n");
+                addRowData(row);
+                if (row == model.getRowCount() - 1)
                 {
-                    writeLastRow(myWriter, colNames, i);
-                    return;
+                    writer.write("}\n]\n}");
+                    writer.close();
                 }
-                myWriter.write("{\n");
-                for (int j = 0; j < model.getColumnCount(); j++)
+                else
                 {
-                    String colName = colNames.get(j);
-                    myWriter.write("\"" + colName + "\":");
-                    myWriter.write("\"" + model.getValue(colName, i) + "\"");
-                    if (j == model.getColumnCount() -1 ) {myWriter.write("\n");}
-                    else {myWriter.write(",\n");}
+                    writer.write("},\n");
                 }
-                myWriter.write("},\n");
             }
         } catch (IOException e) {
             JFrame errorFrame = new JFrame();
@@ -57,20 +52,18 @@ public class JsonManager {
         }
     }
 
-    private void writeLastRow(FileWriter myWriter, ArrayList<String> colNames, int i) throws IOException {
-        myWriter.write("{\n");
-        for (int j = 0; j < model.getColumnCount(); j++) {
+    private void addRowData(int row) throws IOException {
+        ArrayList<String> colNames = model.getColumnNames();
+        for (int j = 0; j < model.getColumnCount(); j++)
+        {
             String colName = colNames.get(j);
-            myWriter.write("\"" + colName + "\":");
-            myWriter.write("\"" + model.getValue(colName, i) + "\"");
-            if (j == model.getColumnCount() - 1) {
-                myWriter.write("\n");
-            } else {
-                myWriter.write(",\n");
-            }
+            writer.write("\"" + colName + "\":");
+            writer.write("\"" + model.getValue(colName, row) + "\"");
+            if (j == model.getColumnCount() -1 ) {
+                writer.write("\n");}
+            else {
+                writer.write(",\n");}
         }
-        myWriter.write("}\n]\n}");
-        myWriter.close();
     }
 
     private int createJsonFile(File fileToSave) {
