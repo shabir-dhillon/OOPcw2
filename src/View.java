@@ -38,7 +38,6 @@ public class View extends JFrame
         setModel(model);
         createGUI();
 
-        //---------------------
         pack();
         setSize(800,620);
         setVisible(true);
@@ -123,6 +122,12 @@ public class View extends JFrame
         inputField.setPreferredSize(new Dimension(90, 25));
     }
 
+    /**
+     * Oracle.com. (2020). How to Use Tables (The JavaTM Tutorials > Creating a GUI With JFC/Swing > Using Swing Components). [online]
+     * Available at: https://docs.oracle.com/javase/tutorial/uiswing/components/table.html#sorting
+     * [Accessed 28 Mar. 2021].
+     * ‌
+     */
     private void newFilter() {
         RowFilter<DataManager, Object> rf = null;
         int colIndex = columnSelection.getSelectedIndex();
@@ -136,17 +141,21 @@ public class View extends JFrame
     }
 
     private void updateComboBox() {
-        searchPanel.remove(columnSelection);
-        searchPanel.remove(inputField);
-        searchPanel.remove(searchBtn);
-        columnSelection = new JComboBox(getStringColArray());
+        removeSearchPanelComponents();
+        columnSelection = new JComboBox(getColNamesArray());
         searchPanel.add(columnSelection);
         searchPanel.add(inputField);
         searchBtn.setEnabled(true);
         searchPanel.add(searchBtn);
     }
 
-    private String[] getStringColArray() {
+    private void removeSearchPanelComponents() {
+        searchPanel.remove(columnSelection);
+        searchPanel.remove(inputField);
+        searchPanel.remove(searchBtn);
+    }
+
+    private String[] getColNamesArray() {
         String[] fields = new String[model.getColumnCount()];
         for (int i = 0; i < fields.length; i++)
         {
@@ -175,25 +184,40 @@ public class View extends JFrame
 
     private void createButtonPanel()
     {
-        loadBtn = new JButton("Load");
-        loadBtn.addActionListener((ActionEvent e) -> loadButtonClicked());
         buttonPanel = new JPanel(new FlowLayout());
-        filterBtn = new JButton("Filter");
-        filterBtn.addActionListener((ActionEvent e) -> submitBtnClicked());
-        filterBtn.setEnabled(false);
-        graphBtn = new JButton("Generate Graph");
-        graphBtn.addActionListener((ActionEvent e) -> graphButtonClicked());
-        graphBtn.setEnabled(false);
+        createLoadBtn();
+        createFilterBtn();
+        createGraphBtn();
+        createSaveBtn();
+    }
+
+    private void createSaveBtn() {
         saveBtn = new JButton("Save to JSON");
         saveBtn.addActionListener((ActionEvent e) -> saveBtnClicked());
-        buttonPanel.add(loadBtn, BorderLayout.CENTER);
-        buttonPanel.add(filterBtn);
-        buttonPanel.add(graphBtn);
         buttonPanel.add(saveBtn);
     }
 
+    private void createGraphBtn() {
+        graphBtn = new JButton("Generate Graph");
+        graphBtn.addActionListener((ActionEvent e) -> graphButtonClicked());
+        graphBtn.setEnabled(false);
+        buttonPanel.add(graphBtn);
+    }
+
+    private void createFilterBtn() {
+        filterBtn = new JButton("Filter");
+        filterBtn.addActionListener((ActionEvent e) -> submitBtnClicked());
+        filterBtn.setEnabled(false);
+        buttonPanel.add(filterBtn);
+    }
+
+    private void createLoadBtn() {
+        loadBtn = new JButton("Load");
+        loadBtn.addActionListener((ActionEvent e) -> loadButtonClicked());
+        buttonPanel.add(loadBtn);
+    }
+
     private void graphButtonClicked() {
-        System.out.println("CLICK");
         GraphWindow graphWindow = new GraphWindow(model);
         newWindowBtnEvent(0);
         graphWindow.addWindowListener(new WindowAdapter() {
@@ -262,11 +286,9 @@ public class View extends JFrame
         {
             return;
         }
-        if (fileToLoad != null) {
-            table = new JTable(model);
-            table.setDefaultRenderer(Object.class, new TableCell());
-            revalidateTable();
-        }
+        table = new JTable(model);
+        table.setDefaultRenderer(Object.class, new TableCell());
+        revalidateTable();
         if (leftPanel != null)
         {
             scrollFilter.remove(leftPanel);
@@ -349,16 +371,17 @@ public class View extends JFrame
         createLeftPanel();
         getFilterList();
         addBoxesToPanel();
-//        System.out.println("Done");
         scrollFilter = new JScrollPane(leftPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        // Has limitations due to comparison and sorting of strings
-        table.setAutoCreateRowSorter(true);
-        sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
+        createAutoTableSorter();
         updateComboBox();
         mainPanel.add(scrollFilter, BorderLayout.WEST);
         mainPanel.updateUI();
-//        System.out.println("out");
+    }
+
+    private void createAutoTableSorter() {
+        table.setAutoCreateRowSorter(true);
+        sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
     }
 
     private void createLeftPanel()
@@ -371,7 +394,6 @@ public class View extends JFrame
         for (JCheckBox filterBox : this.filterBoxes) {
             this.leftPanel.add(filterBox);
         }
-        System.out.println("Done with this");
     }
 
     private void getFilterList() {
@@ -387,16 +409,13 @@ public class View extends JFrame
 
     private void submitBtnClicked()
     {
-        System.out.println("CLICK");
         ArrayList<Boolean>  columnFilter = new ArrayList<>();
         int colCount = model.getColumnCount();
         for (int i = 0; i < colCount; i++) { columnFilter.add(filterBoxes.get(i).isSelected()); }
         hideFilteredColumns(columnFilter);
-        System.out.println("Column Hide Finished");
     }
 
     private void hideFilteredColumns(ArrayList<Boolean>  columnFilter) {
-        System.out.println(columnFilter.toString());
         for (int i = 0; i < table.getColumnCount(); i++) {
             if (columnFilter.get(i).equals(false))
             {

@@ -21,6 +21,11 @@ public class DataManager extends AbstractTableModel {
         dataFrame = loader.loadCSVData(fileName);
     }
 
+    public void loadJsonDataFrame(File fileToLoad)
+    {
+        dataFrame = loader.loadJsonData(fileToLoad);
+    }
+
     public ArrayList<String> getColumnNames()
     {
         return dataFrame.getColumnNames();
@@ -229,10 +234,6 @@ public class DataManager extends AbstractTableModel {
     {
         AgeDistributionFinder ages = new AgeDistributionFinder(dataFrame);
         return ages.findAgeDistribution();
-    }
-
-    public void loadJsonDataFrame(File fileToLoad) {
-        dataFrame = loader.loadJsonData(fileToLoad);
     }
 
     public TreeMap<String, Integer> findGenderData() {
